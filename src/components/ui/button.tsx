@@ -5,6 +5,41 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
+// ─── injected keyframes (no external CSS needed) ──────────────────────────
+const STYLE_ID = "habitat-button-keyframes"
+function useInjectKeyframes() {
+  React.useEffect(() => {
+    if (typeof document === "undefined") return
+    if (document.getElementById(STYLE_ID)) return
+    const style = document.createElement("style")
+    style.id = STYLE_ID
+    style.textContent = `
+      @keyframes habitat-ripple {
+        0%   { transform: scale(1);  opacity: 0.5; }
+        100% { transform: scale(20); opacity: 0;   }
+      }
+      @keyframes habitat-particle-burst {
+        0%   { transform: translate(0,0) scale(1); opacity: 1; }
+        100% { transform: translate(var(--particle-tx),var(--particle-ty)) scale(0); opacity: 0; }
+      }
+      @keyframes habitat-orbit-spin {
+        from { --orbit-angle: 0deg; }
+        to   { --orbit-angle: 360deg; }
+      }
+      @keyframes habitat-logo-entrance {
+        0%   { opacity: 0; transform: scale(0.5) rotate(-10deg); filter: blur(4px); }
+        100% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(0); }
+      }
+      @property --orbit-angle {
+        syntax: "<angle>";
+        initial-value: 0deg;
+        inherits: false;
+      }
+    `
+    document.head.appendChild(style)
+  }, [])
+}
+
 // ─── daata SVG logo ────────────────────────────────────────────────────────
 const DaataLogo = ({ className }: { className?: string }) => (
   <svg
@@ -203,8 +238,9 @@ function OrbitingBorder({
       {/* animated conic-gradient border */}
       {active && (
         <span
-          className="absolute -inset-[2px] rounded-[inherit] animate-orbit-spin"
+          className="absolute -inset-[2px] rounded-[inherit]"
           style={{
+            animation: "habitat-orbit-spin 2.5s linear infinite",
             background:
               "conic-gradient(from var(--orbit-angle, 0deg), transparent 40%, black 50%, transparent 60%)",
             mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
@@ -256,6 +292,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
+    useInjectKeyframes()
     const { ripples, addRipple } = useRipple()
     const { particles, burst } = useParticles()
     const { ref: magneticRef, transform } = useMagnetic(magnetic ? 0.3 : 0)
@@ -301,8 +338,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {ripples.map((r) => (
           <span
             key={r.id}
-            className="pointer-events-none absolute rounded-full bg-white/25 animate-ripple"
+            className="pointer-events-none absolute rounded-full bg-white/25"
             style={{
+              animation: "habitat-ripple 0.65s ease-out forwards",
               left: r.x - 8,
               top: r.y - 8,
               width: 16,
@@ -315,8 +353,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {particles.map((p) => (
           <span
             key={p.id}
-            className="pointer-events-none absolute rounded-full animate-particle-burst"
+            className="pointer-events-none absolute rounded-full"
             style={{
+              animation: "habitat-particle-burst 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards",
               left: p.x,
               top: p.y,
               width: p.size,
@@ -359,7 +398,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
         {/* ── brand logo ── */}
         {(isBrand || showLogo) && !loading && (
-          <span className="flex items-center animate-logo-entrance">
+          <span className="flex items-center" style={{ animation: "habitat-logo-entrance 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards" }}>
             <DaataLogo className="h-[14px] w-auto transition-transform duration-300 group-hover/btn:scale-110 group-hover/btn:rotate-[-2deg]" />
           </span>
         )}
