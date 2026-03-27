@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/context/auth"
 
@@ -93,27 +93,39 @@ export function ButtonDocsPage() {
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)]">
       {/* Sidebar */}
-      <aside className="hidden lg:flex w-56 flex-col border-r border-zinc-100 py-8 pl-6 pr-4 shrink-0">
+      <aside className="hidden lg:flex w-56 shrink-0 flex-col border-r border-zinc-100 py-8 pl-6 pr-4">
         <p className="text-xs font-medium uppercase tracking-widest text-zinc-400 mb-4">
           Documentation
         </p>
         <nav className="flex flex-col gap-1">
-          <Link
+          <NavLink
             to="/docs/getting-started"
-            className="text-sm text-zinc-500 hover:text-black rounded-lg px-3 py-1.5 transition-colors"
+            className={({ isActive }) =>
+              `rounded-md px-3 py-1.5 text-sm transition-colors ${
+                isActive
+                  ? "bg-zinc-100 font-medium text-zinc-900"
+                  : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900"
+              }`
+            }
           >
             Getting Started
-          </Link>
+          </NavLink>
           <div className="mt-3">
             <p className="text-xs font-semibold uppercase tracking-widest text-zinc-600 mb-2 px-3">
               Components
             </p>
-            <Link
+            <NavLink
               to="/docs/components/button"
-              className="text-sm font-medium text-black bg-zinc-100 rounded-lg px-3 py-1.5 block"
+              className={({ isActive }) =>
+                `block rounded-md px-3 py-1.5 text-sm transition-colors ${
+                  isActive
+                    ? "bg-zinc-100 font-medium text-zinc-900"
+                    : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900"
+                }`
+              }
             >
               Button
-            </Link>
+            </NavLink>
           </div>
         </nav>
       </aside>
@@ -130,13 +142,13 @@ export function ButtonDocsPage() {
         {/* Install command */}
         <div className="mb-8">
           {hasProAccess ? (
-            <div className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-zinc-950 px-4 py-3">
-              <code className="flex-1 text-sm font-mono text-zinc-100 overflow-x-auto">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 rounded-xl border border-zinc-200 bg-zinc-950 px-3 sm:px-4 py-3">
+              <code className="flex-1 text-xs sm:text-sm font-mono text-zinc-100 overflow-x-auto whitespace-nowrap">
                 {installCmd}
               </code>
               <button
                 onClick={() => handleCopy(installCmd)}
-                className="shrink-0 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-700 transition-colors"
+                className="shrink-0 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-700 transition-colors self-end sm:self-auto"
               >
                 {copied ? "Copied!" : "Copy"}
               </button>
@@ -200,12 +212,12 @@ export function ButtonDocsPage() {
             </div>
           ) : hasProAccess ? (
             <div className="relative">
-              <pre className="p-6 overflow-x-auto text-sm leading-relaxed text-zinc-100 bg-zinc-950 rounded-xl">
+              <pre className="overflow-x-auto bg-zinc-950 rounded-xl p-3 pt-12 sm:p-6 sm:pt-14 text-xs sm:text-sm leading-relaxed text-zinc-100">
                 <code>{BUTTON_SOURCE}</code>
               </pre>
               <button
                 onClick={() => handleCopy(BUTTON_SOURCE)}
-                className="absolute top-4 right-4 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-700 transition-colors"
+                className="absolute top-2 right-2 sm:top-4 sm:right-4 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-700 transition-colors"
               >
                 {copied ? "Copied!" : "Copy"}
               </button>

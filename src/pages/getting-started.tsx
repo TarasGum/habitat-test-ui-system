@@ -1,11 +1,28 @@
-import { Link } from "react-router-dom"
+import * as React from "react";
+import { Link, NavLink } from "react-router-dom";
 
 function CodeBlock({ children }: { children: string }) {
+  const [copied, setCopied] = React.useState(false);
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(children);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1800);
+  };
+
   return (
-    <pre className="rounded-xl border border-zinc-200 bg-zinc-950 p-4 overflow-x-auto text-sm leading-relaxed text-zinc-100">
-      <code>{children}</code>
-    </pre>
-  )
+    <div className="relative w-full min-w-0 max-w-full overflow-hidden rounded-xl border border-zinc-200 bg-zinc-950">
+      <button
+        onClick={handleCopy}
+        className="absolute right-2 top-2 z-10 rounded-md border border-zinc-700 bg-zinc-900/90 px-2.5 py-1 text-[11px] font-medium text-zinc-300 transition-colors hover:bg-zinc-800 hover:text-white"
+      >
+        {copied ? "Copied" : "Copy"}
+      </button>
+      <pre className="w-full min-w-0 max-w-full overflow-x-auto p-3 pt-10 sm:p-4 sm:pt-11 text-xs sm:text-sm leading-relaxed text-zinc-100">
+        <code className="block whitespace-pre">{children}</code>
+      </pre>
+    </div>
+  );
 }
 
 function Step({
@@ -13,47 +30,64 @@ function Step({
   title,
   children,
 }: {
-  number: number
-  title: string
-  children: React.ReactNode
+  number: number;
+  title: string;
+  children: React.ReactNode;
 }) {
   return (
-    <div className="relative pl-10">
-      <div className="absolute left-0 top-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-black text-white text-xs font-bold">
+    <div className="relative pl-0 sm:pl-10">
+      <div className="mb-2 sm:mb-0 sm:absolute left-0 top-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-black text-white text-xs font-bold">
         {number}
       </div>
       <h3 className="text-lg font-semibold text-black mb-3">{title}</h3>
       <div className="space-y-4 text-zinc-600 leading-relaxed">{children}</div>
     </div>
-  )
+  );
 }
 
 export function GettingStartedPage() {
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)]">
       {/* Sidebar */}
-      <aside className="hidden lg:flex w-56 flex-col border-r border-zinc-100 py-8 pl-6 pr-4 shrink-0">
+      <aside className="hidden lg:flex w-56 shrink-0 flex-col border-r border-zinc-100 py-8 pl-6 pr-4">
         <p className="text-xs font-medium uppercase tracking-widest text-zinc-400 mb-4">
           Documentation
         </p>
         <nav className="flex flex-col gap-1">
-          <Link
+          <NavLink
             to="/docs/getting-started"
-            className="text-sm font-medium text-black bg-zinc-100 rounded-lg px-3 py-1.5"
+            className={({ isActive }) =>
+              `rounded-md px-3 py-1.5 text-sm transition-colors ${
+                isActive
+                  ? "bg-zinc-100 font-medium text-zinc-900"
+                  : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900"
+              }`
+            }
           >
             Getting Started
-          </Link>
-          <Link
-            to="/docs/components/button"
-            className="text-sm text-zinc-500 hover:text-black rounded-lg px-3 py-1.5 transition-colors"
-          >
-            Button
-          </Link>
+          </NavLink>
+          <div className="mt-3">
+            <p className="text-xs font-semibold uppercase tracking-widest text-zinc-600 mb-2 px-3">
+              Components
+            </p>
+            <NavLink
+              to="/docs/components/button"
+              className={({ isActive }) =>
+                `block rounded-md px-3 py-1.5 text-sm transition-colors ${
+                  isActive
+                    ? "bg-zinc-100 font-medium text-zinc-900"
+                    : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900"
+                }`
+              }
+            >
+              Button
+            </NavLink>
+          </div>
         </nav>
       </aside>
 
       {/* Content */}
-      <div className="flex-1 max-w-3xl mx-auto px-6 py-12">
+      <div className="flex-1 min-w-0 max-w-3xl mx-auto px-4 sm:px-6 py-12">
         <h1 className="text-4xl font-bold tracking-tight text-black mb-2">
           Habitat UI &mdash; Getting Started
         </h1>
@@ -82,7 +116,11 @@ npm install`}</CodeBlock>
           <Step number={2} title="Install Tailwind CSS v4">
             <CodeBlock>npm install tailwindcss @tailwindcss/vite</CodeBlock>
             <p>
-              Update <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-sm font-mono text-zinc-800">vite.config.ts</code>:
+              Update{" "}
+              <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-sm font-mono text-zinc-800">
+                vite.config.ts
+              </code>
+              :
             </p>
             <CodeBlock>{`import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
@@ -157,17 +195,21 @@ export default defineConfig({
               npx shadcn add https://habitat-ui-system.vercel.app/r/button.json
             </CodeBlock>
             <p className="text-sm text-zinc-500">
-              That&rsquo;s it. Import <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-zinc-800">Button</code> from{" "}
-              <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-zinc-800">@/components/ui/button</code> and
-              start building.
+              That&rsquo;s it. Import{" "}
+              <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-zinc-800">
+                Button
+              </code>{" "}
+              from{" "}
+              <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-zinc-800">
+                @/components/ui/button
+              </code>{" "}
+              and start building.
             </p>
           </Step>
         </div>
 
         <div className="mt-16 rounded-xl border border-zinc-100 bg-zinc-50/50 p-6 text-center">
-          <p className="text-zinc-500 mb-3">
-            Ready to explore components?
-          </p>
+          <p className="text-zinc-500 mb-3">Ready to explore components?</p>
           <Link
             to="/docs/components/button"
             className="inline-flex h-9 items-center rounded-lg bg-black px-4 text-sm font-medium text-white hover:bg-zinc-800 transition-colors"
@@ -177,5 +219,5 @@ export default defineConfig({
         </div>
       </div>
     </div>
-  )
+  );
 }
