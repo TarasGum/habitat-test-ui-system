@@ -59,6 +59,10 @@ export function LandingPage() {
       {/* Hero */}
       <section className="relative py-28 sm:py-36">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-100 via-white to-white" />
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -top-20 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-zinc-200/50 blur-3xl animate-[pulse_10s_ease-in-out_infinite]" />
+          <div className="absolute right-8 top-24 h-40 w-40 rounded-full bg-zinc-300/30 blur-3xl animate-[pulse_14s_ease-in-out_infinite]" />
+        </div>
         <div className="relative mx-auto max-w-4xl px-6 text-center">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-1.5 text-sm text-zinc-600 shadow-sm">
             <span className="relative flex h-2 w-2">
