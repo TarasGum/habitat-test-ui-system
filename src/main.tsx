@@ -1,10 +1,34 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { StrictMode } from "react"
+import { createRoot } from "react-dom/client"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import "./index.css"
+import { AuthProvider } from "./context/auth"
+import { AppLayout } from "./components/app-layout"
+import { LandingPage } from "./pages/landing"
+import { GettingStartedPage } from "./pages/getting-started"
+import { ButtonDocsPage } from "./pages/button-docs"
+import { PricingPage } from "./pages/pricing"
+import { LoginPage } from "./pages/login"
+import { CheckoutPage } from "./pages/checkout"
+import { SuccessPage } from "./pages/success"
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
-  </StrictMode>,
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<AppLayout />}>
+            <Route index element={<LandingPage />} />
+            <Route path="docs/getting-started" element={<GettingStartedPage />} />
+            <Route path="docs/components/button" element={<ButtonDocsPage />} />
+            <Route path="pricing" element={<PricingPage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="checkout" element={<CheckoutPage />} />
+            <Route path="success" element={<SuccessPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  </StrictMode>
 )
