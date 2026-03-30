@@ -24,10 +24,8 @@ export function AppLayout() {
 
   React.useEffect(() => {
     if (!isMenuOpen) return
-
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = "hidden"
-
     return () => {
       document.body.style.overflow = previousOverflow
     }
@@ -40,13 +38,9 @@ export function AppLayout() {
 
   React.useEffect(() => {
     if (!isMenuOpen) return
-
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsMenuOpen(false)
-      }
+      if (event.key === "Escape") setIsMenuOpen(false)
     }
-
     window.addEventListener("keydown", onKeyDown)
     return () => window.removeEventListener("keydown", onKeyDown)
   }, [isMenuOpen])
@@ -54,11 +48,11 @@ export function AppLayout() {
   return (
     <div className="min-h-screen flex flex-col bg-white text-zinc-900">
       <header className="sticky top-0 z-50 border-b border-zinc-100 bg-white/80 backdrop-blur-lg">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
-          <Link to="/" className="flex items-center gap-2.5 min-w-0">
+        <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-6 px-6">
+          <Link to="/" className="flex items-center gap-2.5 shrink-0">
             <HabitatLogo className="h-5 w-auto text-black" />
-            <span className="hidden sm:inline text-sm font-semibold tracking-tight text-black truncate">
-              Habitat Test UI
+            <span className="hidden sm:inline text-sm font-semibold tracking-tight text-black">
+              Habitat UI
             </span>
           </Link>
 
@@ -69,14 +63,27 @@ export function AppLayout() {
                 to={link.to}
                 className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
                   link.isActive(location.pathname)
-                    ? "text-black font-medium bg-zinc-100"
-                    : "text-zinc-500 hover:text-black hover:bg-zinc-50"
+                    ? "text-black font-medium"
+                    : "text-zinc-500 hover:text-black"
                 }`}
               >
                 {link.label}
               </NavLink>
             ))}
           </nav>
+
+          <div className="flex-1" />
+
+          {/* Search placeholder */}
+          <button className="hidden md:flex items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50/80 px-3 py-1.5 text-sm text-zinc-400 transition-colors hover:border-zinc-300 hover:text-zinc-500 w-[200px]">
+            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <span className="flex-1 text-left">Search...</span>
+            <kbd className="hidden lg:inline-flex h-5 items-center rounded border border-zinc-200 bg-white px-1.5 font-mono text-[10px] font-medium text-zinc-400">
+              ⌘K
+            </kbd>
+          </button>
 
           <div className="flex items-center gap-3">
             {isLoggedIn ? (
@@ -119,9 +126,9 @@ export function AppLayout() {
             </button>
           </div>
         </div>
-
       </header>
 
+      {/* Mobile menu overlay */}
       <div
         id="mobile-menu-overlay"
         className={`md:hidden fixed inset-0 z-[60] transition-opacity duration-200 ${
@@ -205,10 +212,10 @@ export function AppLayout() {
       </main>
 
       <footer className="border-t border-zinc-100 py-8">
-        <div className="mx-auto max-w-6xl px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-zinc-400">
+        <div className="mx-auto max-w-[1400px] px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-zinc-400">
           <div className="flex items-center gap-2">
             <HabitatLogo className="h-3.5 w-auto" />
-            <span>Habitat Test UI</span>
+            <span>Habitat UI</span>
           </div>
           <p>Built for developers who care about craft.</p>
         </div>

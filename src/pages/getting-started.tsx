@@ -1,128 +1,45 @@
-import * as React from "react";
-import { Link, NavLink } from "react-router-dom";
-
-function CodeBlock({ children }: { children: string }) {
-  const [copied, setCopied] = React.useState(false);
-
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(children);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1800);
-  };
-
-  return (
-    <div className="relative w-full min-w-0 max-w-full overflow-hidden rounded-xl border border-zinc-200 bg-zinc-950">
-      <button
-        onClick={handleCopy}
-        className="absolute right-2 top-2 z-10 rounded-md border border-zinc-700 bg-zinc-900/90 px-2.5 py-1 text-[11px] font-medium text-zinc-300 transition-colors hover:bg-zinc-800 hover:text-white"
-      >
-        {copied ? "Copied" : "Copy"}
-      </button>
-      <pre className="w-full min-w-0 max-w-full overflow-x-auto p-3 pt-10 sm:p-4 sm:pt-11 text-xs sm:text-sm leading-relaxed text-zinc-100">
-        <code className="block whitespace-pre">{children}</code>
-      </pre>
-    </div>
-  );
-}
-
-function Step({
-  number,
-  title,
-  children,
-}: {
-  number: number;
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="relative pl-0 sm:pl-10">
-      <div className="mb-2 sm:mb-0 sm:absolute left-0 top-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-black text-white text-xs font-bold">
-        {number}
-      </div>
-      <h3 className="text-lg font-semibold text-black mb-3">{title}</h3>
-      <div className="space-y-4 text-zinc-600 leading-relaxed">{children}</div>
-    </div>
-  );
-}
+import { Link } from "react-router-dom"
+import { DocLayout, DocHeader, DocSection } from "@/components/docs/doc-layout"
+import { CodeBlock, CommandBlock, InlineCode } from "@/components/docs/code-block"
+import { Steps, Step } from "@/components/docs/steps"
+import { Callout } from "@/components/docs/callout"
 
 export function GettingStartedPage() {
   return (
-    <div className="flex min-h-[calc(100vh-3.5rem)]">
-      {/* Sidebar */}
-      <aside className="hidden lg:flex w-56 shrink-0 flex-col border-r border-zinc-100 py-8 pl-6 pr-4">
-        <p className="text-xs font-medium uppercase tracking-widest text-zinc-400 mb-4">
-          Documentation
-        </p>
-        <nav className="flex flex-col gap-1">
-          <NavLink
-            to="/docs/getting-started"
-            className={({ isActive }) =>
-              `rounded-md px-3 py-1.5 text-sm transition-colors ${
-                isActive
-                  ? "bg-zinc-100 font-medium text-zinc-900"
-                  : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900"
-              }`
-            }
-          >
-            Getting Started
-          </NavLink>
-          <div className="mt-3">
-            <p className="text-xs font-semibold uppercase tracking-widest text-zinc-600 mb-2 px-3">
-              Components
-            </p>
-            <NavLink
-              to="/docs/components/button"
-              className={({ isActive }) =>
-                `block rounded-md px-3 py-1.5 text-sm transition-colors ${
-                  isActive
-                    ? "bg-zinc-100 font-medium text-zinc-900"
-                    : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900"
-                }`
-              }
-            >
-              Button
-            </NavLink>
-          </div>
-        </nav>
-      </aside>
+    <DocLayout>
+      <DocHeader
+        title="Getting Started"
+        description="Set up a new project with Habitat UI components in under five minutes."
+        badge="Docs"
+      />
 
-      {/* Content */}
-      <div className="flex-1 min-w-0 max-w-3xl mx-auto px-4 sm:px-6 py-12">
-        <h1 className="text-4xl font-bold tracking-tight text-black mb-2">
-          Habitat UI &mdash; Getting Started
-        </h1>
-        <p className="text-zinc-500 mb-10">
-          Set up a new project with Habitat components in under five minutes.
-        </p>
-
-        {/* Prerequisites */}
-        <div className="rounded-xl border border-zinc-100 bg-zinc-50/50 p-6 mb-10">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-zinc-400 mb-3">
-            Prerequisites
-          </h2>
-          <ul className="list-disc list-inside text-zinc-600 space-y-1 text-sm">
-            <li>Node.js 18+</li>
+      <DocSection id="prerequisites" title="Prerequisites">
+        <Callout type="note" title="Before you begin">
+          <ul className="list-disc list-inside space-y-1 mt-1">
+            <li>Node.js 18 or later</li>
             <li>A React project (or create one below)</li>
           </ul>
-        </div>
+        </Callout>
+      </DocSection>
 
-        <div className="space-y-12">
-          <Step number={1} title="Create a React project">
-            <CodeBlock>{`npm create vite@latest my-app -- --template react-ts
-cd my-app
-npm install`}</CodeBlock>
+      <DocSection id="installation" title="Installation">
+        <Steps>
+          <Step title="Create a React project">
+            <p>Start by creating a new Vite project with the React + TypeScript template.</p>
+            <CommandBlock command="npm create vite@latest my-app -- --template react-ts" />
+            <CommandBlock command="cd my-app && npm install" />
           </Step>
 
-          <Step number={2} title="Install Tailwind CSS v4">
-            <CodeBlock>npm install tailwindcss @tailwindcss/vite</CodeBlock>
+          <Step title="Install Tailwind CSS v4">
+            <p>Install Tailwind CSS and the Vite plugin.</p>
+            <CommandBlock command="npm install tailwindcss @tailwindcss/vite" />
             <p>
-              Update{" "}
-              <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-sm font-mono text-zinc-800">
-                vite.config.ts
-              </code>
-              :
+              Update your <InlineCode>vite.config.ts</InlineCode> to include the Tailwind plugin:
             </p>
-            <CodeBlock>{`import { defineConfig } from "vite";
+            <CodeBlock
+              filename="vite.config.ts"
+              lang="ts"
+              code={`import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
@@ -133,91 +50,124 @@ export default defineConfig({
       "@": "/src",
     },
   },
-});`}</CodeBlock>
+});`}
+            />
             <p>
-              Replace everything in{" "}
-              <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-sm font-mono text-zinc-800">
-                src/index.css
-              </code>{" "}
-              with:
+              Replace everything in <InlineCode>src/index.css</InlineCode> with:
             </p>
-            <CodeBlock>@import "tailwindcss";</CodeBlock>
+            <CodeBlock filename="src/index.css" lang="css" code={`@import "tailwindcss";`} />
           </Step>
 
-          <Step number={3} title="Set up path alias">
+          <Step title="Set up path aliases">
             <p>
-              Add to{" "}
-              <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-sm font-mono text-zinc-800">
-                tsconfig.json
-              </code>{" "}
-              (the root one, not tsconfig.app.json):
+              Add the following to your root <InlineCode>tsconfig.json</InlineCode> (not{" "}
+              <InlineCode>tsconfig.app.json</InlineCode>):
             </p>
-            <CodeBlock>{`{
+            <CodeBlock
+              filename="tsconfig.json"
+              lang="json"
+              code={`{
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
   }
-}`}</CodeBlock>
+}`}
+            />
           </Step>
 
-          <Step number={4} title="Initialize shadcn">
-            <CodeBlock>npx shadcn@latest init</CodeBlock>
-            <p>Select:</p>
-            <ul className="list-disc list-inside text-sm space-y-1">
-              <li>Radix component library</li>
-              <li>Nova preset (or any)</li>
+          <Step title="Initialize shadcn">
+            <CommandBlock command="npx shadcn@latest init" />
+            <p>When prompted, select:</p>
+            <ul className="list-disc list-inside space-y-1 text-sm text-zinc-600">
+              <li>Style: <strong>New York</strong> (or any)</li>
+              <li>Base color: <strong>Neutral</strong></li>
+              <li>CSS variables: <strong>Yes</strong></li>
             </ul>
+            <Callout type="tip" title="What this does">
+              This creates <InlineCode>components.json</InlineCode>, a{" "}
+              <InlineCode>cn</InlineCode> utility at{" "}
+              <InlineCode>src/lib/utils.ts</InlineCode>, and updates your CSS with
+              theme variables.
+            </Callout>
+          </Step>
+
+          <Step title="Add Habitat components">
+            <p>Install the Habitat button (and any other components) from the registry:</p>
+            <CommandBlock command="npx shadcn add https://habitat-ui-system.vercel.app/r/button.json" />
             <p className="text-sm text-zinc-500">
-              This creates{" "}
-              <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-zinc-800">
-                components.json
-              </code>
-              , the{" "}
-              <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-zinc-800">
-                cn
-              </code>{" "}
-              utility at{" "}
-              <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-zinc-800">
-                src/lib/utils.ts
-              </code>
-              , and updates your CSS with theme variables.
+              This automatically installs dependencies like{" "}
+              <InlineCode>class-variance-authority</InlineCode> and copies the component
+              to <InlineCode>src/components/ui/button.tsx</InlineCode>.
             </p>
           </Step>
 
-          <Step number={5} title="Add Habitat components">
-            <p>
-              Install the Habitat button (and any other components) via the
-              registry:
-            </p>
-            <CodeBlock>
-              npx shadcn add https://habitat-ui-system.vercel.app/r/button.json
-            </CodeBlock>
-            <p className="text-sm text-zinc-500">
-              That&rsquo;s it. Import{" "}
-              <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-zinc-800">
-                Button
-              </code>{" "}
-              from{" "}
-              <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-zinc-800">
-                @/components/ui/button
-              </code>{" "}
-              and start building.
-            </p>
-          </Step>
-        </div>
+          <Step title="Start building">
+            <p>Import the component and you're ready to go.</p>
+            <CodeBlock
+              filename="src/App.tsx"
+              lang="tsx"
+              code={`import { Button } from "@/components/ui/button";
 
-        <div className="mt-16 rounded-xl border border-zinc-100 bg-zinc-50/50 p-6 text-center">
-          <p className="text-zinc-500 mb-3">Ready to explore components?</p>
-          <Link
-            to="/docs/components/button"
-            className="inline-flex h-9 items-center rounded-lg bg-black px-4 text-sm font-medium text-white hover:bg-zinc-800 transition-colors"
-          >
-            View Button Component
-          </Link>
-        </div>
-      </div>
+function App() {
+  return (
+    <div className="flex items-center justify-center min-h-screen gap-4">
+      <Button>Default</Button>
+      <Button variant="outline">Outline</Button>
+      <Button variant="brand" />
+      <Button magnetic>Magnetic</Button>
     </div>
   );
+}
+
+export default App;`}
+            />
+            <CommandBlock command="npm run dev" />
+          </Step>
+        </Steps>
+      </DocSection>
+
+      <DocSection id="next-steps" title="Next Steps">
+        <div className="grid sm:grid-cols-2 gap-3">
+          <Link
+            to="/docs/components/button"
+            className="group rounded-xl border border-zinc-200 p-5 transition-all hover:border-zinc-300 hover:shadow-md hover:shadow-zinc-100"
+          >
+            <div className="text-sm font-semibold text-zinc-900 group-hover:text-black">
+              Button Component
+            </div>
+            <p className="mt-1 text-[13px] text-zinc-500">
+              Explore all variants, sizes, and interactive features.
+            </p>
+            <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-zinc-400 group-hover:text-zinc-600 transition-colors">
+              Read more
+              <svg className="h-3 w-3 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </span>
+          </Link>
+          <a
+            href="https://ui.shadcn.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group rounded-xl border border-zinc-200 p-5 transition-all hover:border-zinc-300 hover:shadow-md hover:shadow-zinc-100"
+          >
+            <div className="text-sm font-semibold text-zinc-900 group-hover:text-black">
+              shadcn/ui Docs
+            </div>
+            <p className="mt-1 text-[13px] text-zinc-500">
+              Learn more about the registry and CLI system.
+            </p>
+            <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-zinc-400 group-hover:text-zinc-600 transition-colors">
+              Visit site
+              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </span>
+          </a>
+        </div>
+      </DocSection>
+    </DocLayout>
+  )
 }
