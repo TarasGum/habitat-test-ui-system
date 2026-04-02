@@ -171,8 +171,7 @@ export function ButtonDocsPage() {
   const [copied, setCopied] = React.useState(false)
 
   const isBrand = variant === "brand"
-  const installCmd =
-    "npx shadcn add https://habitat-ui-system.vercel.app/r/button.json"
+  const installCmd = `npx shadcn add ${import.meta.env.VITE_REGISTRY_URL}/button.json`
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text)
@@ -197,9 +196,11 @@ export function ButtonDocsPage() {
             className="relative cursor-pointer group"
             onClick={() => setShowPaywall(true)}
           >
-            <CommandBlock command={installCmd} />
-            <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-zinc-950/60 backdrop-blur-[2px]">
-              <span className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-black shadow-lg group-hover:scale-105 transition-transform">
+            <div className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 font-mono text-sm text-zinc-400 select-none">
+              npx shadcn add ••••••••••••••••••••
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center rounded-xl">
+              <span className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-black shadow-lg ring-1 ring-zinc-200 group-hover:scale-105 transition-transform">
                 Unlock with Pro
               </span>
             </div>
@@ -210,6 +211,45 @@ export function ButtonDocsPage() {
           lang="tsx"
           code={`import { Button } from "@/components/ui/button"`}
         />
+      </DocSection>
+
+      {/* Source Code */}
+      <DocSection id="source" title="Source">
+        {hasProAccess ? (
+          <div className="relative">
+            <CodeBlock code={BUTTON_SOURCE} lang="tsx" filename="components/ui/button.tsx" />
+            <button
+              onClick={() => handleCopy(BUTTON_SOURCE)}
+              className="absolute right-3 top-12 z-20 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-700 transition-colors"
+            >
+              {copied ? "Copied!" : "Copy all"}
+            </button>
+          </div>
+        ) : (
+          <div
+            className="relative cursor-pointer group"
+            onClick={() => setShowPaywall(true)}
+          >
+            <div className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 blur-[3px] select-none pointer-events-none">
+              <pre className="p-4 text-[13px] leading-relaxed text-zinc-400 max-h-[300px] overflow-hidden">
+                <code>{BUTTON_SOURCE}</code>
+              </pre>
+            </div>
+            <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-zinc-950/50 backdrop-blur-[1px]">
+              <div className="text-center">
+                <p className="text-white font-semibold mb-1">
+                  Pro access required
+                </p>
+                <p className="text-sm text-zinc-400 mb-4">
+                  Unlock full source code for all components.
+                </p>
+                <span className="rounded-lg bg-white px-5 py-2.5 text-sm font-medium text-black shadow-lg group-hover:scale-105 transition-transform inline-block">
+                  Unlock with Pro
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
       </DocSection>
 
       {/* Usage */}
@@ -412,45 +452,6 @@ export function ButtonDocsPage() {
           </code>{" "}
           HTML attributes are also supported via spread props.
         </Callout>
-      </DocSection>
-
-      {/* Source Code */}
-      <DocSection id="source" title="Source">
-        {hasProAccess ? (
-          <div className="relative">
-            <CodeBlock code={BUTTON_SOURCE} lang="tsx" filename="components/ui/button.tsx" />
-            <button
-              onClick={() => handleCopy(BUTTON_SOURCE)}
-              className="absolute right-3 top-12 z-20 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-700 transition-colors"
-            >
-              {copied ? "Copied!" : "Copy all"}
-            </button>
-          </div>
-        ) : (
-          <div
-            className="relative cursor-pointer group"
-            onClick={() => setShowPaywall(true)}
-          >
-            <div className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 blur-[3px] select-none pointer-events-none">
-              <pre className="p-4 text-[13px] leading-relaxed text-zinc-400 max-h-[300px] overflow-hidden">
-                <code>{BUTTON_SOURCE}</code>
-              </pre>
-            </div>
-            <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-zinc-950/50 backdrop-blur-[1px]">
-              <div className="text-center">
-                <p className="text-white font-semibold mb-1">
-                  Pro access required
-                </p>
-                <p className="text-sm text-zinc-400 mb-4">
-                  Unlock full source code for all components.
-                </p>
-                <span className="rounded-lg bg-white px-5 py-2.5 text-sm font-medium text-black shadow-lg group-hover:scale-105 transition-transform inline-block">
-                  Unlock with Pro
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
       </DocSection>
 
       {/* Paywall Modal */}

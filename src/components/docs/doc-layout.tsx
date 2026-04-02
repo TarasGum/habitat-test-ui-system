@@ -12,6 +12,7 @@ const sidebarNav = [
     title: "Components",
     items: [
       { title: "Button", href: "/docs/components/button" },
+      { title: "Agentic Layout", href: "/docs/components/agentic-layout" },
     ],
   },
 ]

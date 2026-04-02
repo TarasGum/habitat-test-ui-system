@@ -43,6 +43,21 @@
           "animate-logo-entrance": { "animation": "logo-entrance 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards" }
         }
       }
+    },
+    {
+      "name": "agentic-layout",
+      "type": "registry:block",
+      "title": "Agentic Layout",
+      "description": "T3 Chat-style agentic layout with fuzzy glassmorphism aesthetics. Includes sidebar, message thread, and chat input.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["scroll-area", "avatar", "separator", "tooltip", "badge", "utils"],
+      "files": [
+        {
+          "path": "src/components/ui/agentic-layout.tsx",
+          "type": "registry:component",
+          "target": "components/ui/agentic-layout.tsx"
+        }
+      ]
     }
   ]
 }
