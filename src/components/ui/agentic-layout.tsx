@@ -58,24 +58,23 @@ function AgenticLayout({
     <AgenticContext.Provider value={{ sidebarOpen, setSidebarOpen }}>
       <div
         className={cn(
-          "relative flex h-screen w-full overflow-hidden bg-zinc-50",
+          "relative isolate flex h-screen w-full overflow-hidden bg-zinc-50",
           className
         )}
       >
-        {/* gradient orbs */}
         <div
-          className="pointer-events-none fixed -top-32 -left-32 size-[500px] rounded-full opacity-25 blur-[120px]"
+          className="pointer-events-none absolute -top-32 -left-32 z-[0] size-[500px] rounded-full opacity-25 blur-[120px]"
           style={{ background: "radial-gradient(circle, #a5b4fc 0%, transparent 70%)" }}
           aria-hidden
         />
         <div
-          className="pointer-events-none fixed -right-32 -bottom-32 size-[500px] rounded-full opacity-20 blur-[120px]"
+          className="pointer-events-none absolute -right-32 -bottom-32 z-[0] size-[500px] rounded-full opacity-20 blur-[120px]"
           style={{ background: "radial-gradient(circle, #fbbf24 0%, transparent 70%)" }}
           aria-hidden
         />
         {/* noise texture */}
         <div
-          className="pointer-events-none fixed inset-0 z-0"
+          className="pointer-events-none absolute inset-0 z-[0]"
           style={{ backgroundImage: NOISE_SVG, backgroundRepeat: "repeat" }}
           aria-hidden
         />
@@ -108,7 +107,6 @@ function AgenticSidebar({
   className,
 }: AgenticSidebarProps) {
   const { sidebarOpen, setSidebarOpen } = useAgentic()
-  const [hoveredId, setHoveredId] = React.useState<string | null>(null)
 
   return (
     <TooltipProvider>
@@ -121,10 +119,10 @@ function AgenticSidebar({
         )}
       >
         {/* top bar */}
-        <div className="flex items-center gap-2 px-3 py-3">
+        <div className="flex items-center gap-2 border-b border-white/20 px-3 py-2.5">
           <Tooltip>
             <TooltipTrigger
-              className="flex size-8 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-white/60 hover:text-zinc-900"
+              className="flex size-8 cursor-pointer items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-white/60 hover:text-zinc-900"
               onClick={() => setSidebarOpen(!sidebarOpen)}
             >
               {sidebarOpen ? (
@@ -141,7 +139,7 @@ function AgenticSidebar({
           {sidebarOpen && (
             <Tooltip>
               <TooltipTrigger
-                className="ml-auto flex size-8 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-white/60 hover:text-zinc-900"
+                className="ml-auto flex size-8 cursor-pointer items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-white/60 hover:text-zinc-900"
                 onClick={onNewChat}
               >
                 <MessageSquarePlusIcon className="size-4" />
@@ -152,10 +150,11 @@ function AgenticSidebar({
         </div>
 
         {header && sidebarOpen && (
-          <div className="px-3 pb-2">{header}</div>
+          <>
+            <div className="px-3 pb-2">{header}</div>
+            <Separator className="opacity-50" />
+          </>
         )}
-
-        {sidebarOpen && <Separator className="opacity-50" />}
 
         {/* conversation list */}
         {sidebarOpen && (
@@ -165,21 +164,19 @@ function AgenticSidebar({
                 <div
                   key={conv.id}
                   className={cn(
-                    "group relative flex items-center rounded-lg px-2.5 py-2 text-sm transition-all duration-150 cursor-pointer",
+                    "group relative flex items-center rounded-lg px-2.5 py-2 text-sm transition-colors duration-150 cursor-pointer",
                     conv.active
                       ? "bg-white/70 text-zinc-900 shadow-sm backdrop-blur-sm"
                       : "text-zinc-600 hover:bg-white/40 hover:text-zinc-900"
                   )}
                   onClick={() => onSelectConversation?.(conv.id)}
-                  onMouseEnter={() => setHoveredId(conv.id)}
-                  onMouseLeave={() => setHoveredId(null)}
                 >
-                  <span className="truncate flex-1">{conv.title}</span>
-                  {hoveredId === conv.id && (
-                    <div className="flex items-center gap-0.5 ml-1">
+                  <span className="min-w-0 flex-1 truncate">{conv.title}</span>
+                  {(onRenameConversation || onDeleteConversation) && (
+                    <div className="ml-1 flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
                       {onRenameConversation && (
                         <button
-                          className="flex size-6 items-center justify-center rounded-md text-zinc-400 hover:bg-white/60 hover:text-zinc-700 transition-colors"
+                          className="flex size-6 cursor-pointer items-center justify-center rounded-md text-zinc-400 transition-colors hover:bg-white/60 hover:text-zinc-700"
                           onClick={(e) => {
                             e.stopPropagation()
                             onRenameConversation(conv.id)
@@ -190,7 +187,7 @@ function AgenticSidebar({
                       )}
                       {onDeleteConversation && (
                         <button
-                          className="flex size-6 items-center justify-center rounded-md text-zinc-400 hover:bg-red-50 hover:text-red-500 transition-colors"
+                          className="flex size-6 cursor-pointer items-center justify-center rounded-md text-zinc-400 transition-colors hover:bg-red-50 hover:text-red-500"
                           onClick={(e) => {
                             e.stopPropagation()
                             onDeleteConversation(conv.id)
@@ -229,7 +226,7 @@ function AgenticMain({ children, className }: AgenticMainProps) {
   return (
     <div
       className={cn(
-        "relative z-10 flex flex-1 flex-col overflow-hidden",
+        "relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden",
         className
       )}
     >
@@ -278,13 +275,18 @@ export interface AgenticMessagesProps {
 
 function AgenticMessages({ children, className }: AgenticMessagesProps) {
   const endRef = React.useRef<HTMLDivElement>(null)
+  const childCount = React.Children.count(children)
+  const prevCount = React.useRef(childCount)
 
   React.useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" })
-  })
+    if (prevCount.current !== childCount) {
+      prevCount.current = childCount
+      endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" })
+    }
+  }, [childCount])
 
   return (
-    <ScrollArea className={cn("flex-1", className)}>
+    <ScrollArea className={cn("min-h-0 flex-1", className)}>
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 py-6">
         {children}
         <div ref={endRef} />
@@ -413,7 +415,7 @@ function AgenticInput({
       )}
     >
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-2">
-        <div className="relative flex items-end gap-2 rounded-2xl border border-white/40 bg-white/80 px-3 py-2 shadow-sm backdrop-blur-sm transition-shadow focus-within:shadow-md focus-within:ring-2 focus-within:ring-zinc-200/60">
+        <div className="relative flex items-center gap-2 rounded-2xl border border-white/40 bg-white/80 px-3 py-2 shadow-sm backdrop-blur-sm transition-shadow focus-within:shadow-md focus-within:ring-2 focus-within:ring-zinc-200/60">
           <textarea
             ref={textareaRef}
             value={value}
@@ -429,10 +431,10 @@ function AgenticInput({
             <Tooltip>
               <TooltipTrigger
                 className={cn(
-                  "flex size-8 shrink-0 items-center justify-center rounded-xl transition-all duration-200",
+                  "flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-xl transition-all duration-200",
                   value.trim()
                     ? "bg-zinc-900 text-white shadow-sm hover:bg-zinc-700"
-                    : "text-zinc-300"
+                    : "cursor-default text-zinc-300"
                 )}
                 onClick={handleSubmit}
                 disabled={!value.trim() || disabled}

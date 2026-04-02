@@ -274,9 +274,8 @@ function DemoPreview() {
         "There are several ways to center a div! The most modern approach is using flexbox:\n\n```css\n.parent {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n```\n\nThis works for both horizontal and vertical centering. You can also use `place-items: center` with CSS Grid for a one-liner.",
     },
   ])
-
   return (
-    <div className="h-[520px] w-full overflow-hidden rounded-xl border border-zinc-200">
+    <div className="h-[520px] w-full overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50" style={{ clipPath: 'inset(0 round 0.75rem)' }}>
       <AgenticLayout className="!h-full">
         <AgenticSidebar
           conversations={DEMO_CONVERSATIONS}
@@ -318,7 +317,7 @@ function DemoPreview() {
 
 function DemoEmptyState() {
   return (
-    <div className="h-[400px] w-full overflow-hidden rounded-xl border border-zinc-200">
+    <div className="h-[400px] w-full overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50" style={{ clipPath: 'inset(0 round 0.75rem)' }}>
       <AgenticLayout className="!h-full">
         <AgenticSidebar conversations={[]} onNewChat={() => {}} />
         <AgenticMain>
@@ -352,7 +351,7 @@ export function AgenticLayoutDocsPage() {
     <DocLayout>
       <DocHeader
         title="Agentic Layout"
-        description="T3 Chat-style agentic layout with glassmorphism aesthetics. Includes a collapsible sidebar, scrollable message thread, and fuzzy input bar."
+        description="Agentic chat layout with glassmorphism aesthetics. Includes a collapsible sidebar, scrollable message thread, and input bar."
         badge="Template"
       />
 

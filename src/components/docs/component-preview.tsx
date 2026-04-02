@@ -50,27 +50,28 @@ export function ComponentPreview({
         </button>
       </div>
 
-      {tab === "preview" ? (
-        <div
-          className={cn(
-            "flex min-h-[200px] w-full p-10",
-            align === "center" && "items-center justify-center",
-            align === "start" && "items-start justify-start",
-            align === "end" && "items-end justify-end"
-          )}
-          style={{
-            backgroundImage:
-              "radial-gradient(circle, hsl(0 0% 90%) 1px, transparent 1px)",
-            backgroundSize: "24px 24px",
-          }}
-        >
-          {children}
-        </div>
-      ) : (
-        <div className="[&_>div]:rounded-none [&_>div]:border-0">
-          <CodeBlock code={code} lang={lang} />
-        </div>
-      )}
+      <div
+        className={cn(
+          "min-h-[200px] w-full p-10",
+          align === "center" && "items-center justify-center",
+          align === "start" && "items-start justify-start",
+          align === "end" && "items-end justify-end",
+          tab === "preview" ? "flex" : "hidden"
+        )}
+        style={{
+          backgroundImage:
+            "radial-gradient(circle, hsl(0 0% 90%) 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+        }}
+      >
+        {children}
+      </div>
+      <div className={cn(
+        "[&_>div]:rounded-none [&_>div]:border-0",
+        tab === "code" ? "block" : "hidden"
+      )}>
+        <CodeBlock code={code} lang={lang} />
+      </div>
     </div>
   )
 }
