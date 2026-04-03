@@ -1,43 +1,55 @@
 # Habitat UI — Getting Started
 
-## 1. Create a Vite + React project
+## Prerequisites
+
+- **Node.js 18** or later
+- A package manager (`npm`, `pnpm`, or `yarn`)
+
+## 1. Create a new project with shadcn
+
+The fastest way to start is with the shadcn CLI. It scaffolds a Vite + React + TypeScript project with Tailwind CSS v4, path aliases, theme CSS, and a `cn` utility — all in one step.
 
 ```bash
-npm create vite@latest my-app -- --template react-ts
+npx shadcn@latest init -t vite my-app
 cd my-app
-npm install
-```
-
-## 2. Initialize shadcn
-
-Run this inside the project. It adds Tailwind CSS, path aliases, theme CSS, and a `cn` utility.
-
-```bash
-npx shadcn@latest init
 ```
 
 When prompted, pick **Radix Nova** style (recommended) and **Neutral** base color.
 
-## 3. Configure the Habitat registry
+> **Already have a Vite + React project?** Run `npx shadcn@latest init` inside it instead — the CLI auto-detects Vite and configures everything for you.
 
-Open `components.json` and add the registry:
+## 2. Add the Habitat registry
+
+Open the generated `components.json` and add `@habitat` to the `registries` field:
 
 ```json
 {
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "radix-nova",
   "registries": {
     "@habitat": "https://habitat-ui-system.vercel.app/r/{name}.json"
   }
 }
 ```
 
-## 4. Install components
+Only the `registries` block is new — leave the rest of the file as-is.
+
+## 3. Install components
 
 ```bash
-npx shadcn@latest add @habitat/button
-npx shadcn@latest add @habitat/agentic-layout
+npx shadcn@latest add @habitat/button @habitat/agentic-layout
 ```
 
-## 5. Use it
+This fetches the component source code, installs any npm dependencies, and injects required CSS — no manual wiring needed.
+
+### Available components
+
+| Component | Install command |
+|---|---|
+| Button | `npx shadcn@latest add @habitat/button` |
+| Agentic Layout | `npx shadcn@latest add @habitat/agentic-layout` |
+
+## 4. Use it
 
 ```tsx
 import { Button } from "@/components/ui/button";

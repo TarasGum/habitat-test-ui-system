@@ -67,34 +67,35 @@ export function GettingStartedPage() {
       <DocSection id="prerequisites" title="Prerequisites">
         <Callout type="note" title="Before you begin">
           <ul className="list-disc list-inside space-y-1 mt-1">
-            <li>Node.js 18 or later</li>
-            <li>A Vite + React project (or create one in step 1)</li>
+            <li><strong>Node.js 18</strong> or later</li>
+            <li>A package manager (<InlineCode>npm</InlineCode>, <InlineCode>pnpm</InlineCode>, or <InlineCode>yarn</InlineCode>)</li>
           </ul>
         </Callout>
       </DocSection>
 
       <DocSection id="installation" title="Installation">
         <Steps>
-          <Step title="Create a Vite + React project">
-            <CommandBlock command="npm create vite@latest my-app -- --template react-ts" />
-            <CommandBlock command="cd my-app && npm install" />
-          </Step>
-
-          <Step title="Initialize shadcn">
-            <p>Run this inside the project you just created. It adds Tailwind CSS, path aliases, theme CSS, and a <InlineCode>cn</InlineCode> utility.</p>
-            <CommandBlock command="npx shadcn@latest init" />
+          <Step title="Create a new project with shadcn">
+            <p>The fastest way to start is with the shadcn CLI. It scaffolds a Vite + React + TypeScript project with Tailwind CSS v4, path aliases, theme CSS, and a <InlineCode>cn</InlineCode> utility — all in one step.</p>
+            <CommandBlock command="npx shadcn@latest init -t vite my-app" />
+            <CommandBlock command="cd my-app" />
             <p>When prompted, pick <strong>Radix Nova</strong> style (recommended) and <strong>Neutral</strong> base color.</p>
+            <Callout type="note" title="Already have a project?">
+              Run <InlineCode>npx shadcn@latest init</InlineCode> inside your existing Vite + React project — the CLI auto-detects Vite and configures everything for you.
+            </Callout>
           </Step>
 
-          <Step title="Configure the Habitat registry">
+          <Step title="Add the Habitat registry">
             <p>
-              Open <InlineCode>components.json</InlineCode> and add the Habitat registry:
+              Open the generated <InlineCode>components.json</InlineCode> and add <InlineCode>@habitat</InlineCode> to the <InlineCode>registries</InlineCode> field. Leave the rest of the file as-is.
             </p>
             {hasProAccess ? (
               <CodeBlock
                 filename="components.json"
                 lang="json"
                 code={`{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "radix-nova",
   "registries": {
     "@habitat": "https://habitat-ui-system.vercel.app/r/{name}.json"
   }
@@ -105,11 +106,11 @@ export function GettingStartedPage() {
             )}
           </Step>
 
-          <Step title="Add Habitat components">
-            <p>Install components using the <InlineCode>@habitat</InlineCode> namespace:</p>
+          <Step title="Install Habitat components">
+            <p>Install components using the <InlineCode>@habitat</InlineCode> namespace. This fetches the source code, installs npm dependencies, and injects required CSS automatically.</p>
             {hasProAccess ? (
               <>
-                <CommandBlock command="npx shadcn@latest add @habitat/button" />
+                <CommandBlock command="npx shadcn@latest add @habitat/button @habitat/agentic-layout" />
                 <Callout type="note" title="Available components">
                   <ul className="list-disc list-inside space-y-1 mt-1">
                     <li><InlineCode>@habitat/button</InlineCode> — Animated button with ripple, particles, magnetic hover</li>
