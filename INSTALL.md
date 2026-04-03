@@ -5,69 +5,15 @@
 - **Node.js 18** or later
 - A package manager (`npm`, `pnpm`, or `yarn`)
 
----
-
-## New project
-
-### 1. Scaffold with the shadcn CLI
-
-This creates a Vite + React + TypeScript project with Tailwind CSS v4, path aliases, theme CSS, and a `cn` utility — all in one command.
+## 1. Create a Vite + React project
 
 ```bash
-npx shadcn@latest init -t vite
-```
-
-The CLI will prompt you for a project name and configuration. Pick **Radix** base and **Nova** preset (recommended).
-
-```bash
+npm create vite@latest my-app -- --template react-ts
 cd my-app
+npm install
 ```
 
-### 2. Add the Habitat registry
-
-Open `components.json` and add `@habitat` to the `registries` field:
-
-```json
-{
-  "registries": {
-    "@habitat": "https://habitat-ui-system.vercel.app/r/{name}.json"
-  }
-}
-```
-
-Leave the rest of the file as-is — only the `registries` block is new.
-
-### 3. Install components
-
-```bash
-npx shadcn@latest add @habitat/button @habitat/agentic-layout
-```
-
-This fetches the component source code, installs npm dependencies, and injects required CSS automatically.
-
-### 4. Use it
-
-```tsx
-import { Button } from "@/components/ui/button";
-
-export default function App() {
-  return <Button>Click me</Button>;
-}
-```
-
-```bash
-npm run dev
-```
-
-That's it.
-
----
-
-## Existing Vite + React project
-
-If you already have a Vite + React project, follow these steps instead.
-
-### 1. Install Tailwind CSS v4
+## 2. Add Tailwind CSS v4
 
 ```bash
 npm install tailwindcss @tailwindcss/vite
@@ -79,24 +25,7 @@ Replace everything in `src/index.css` with:
 @import "tailwindcss";
 ```
 
-Add the Tailwind plugin to `vite.config.ts`:
-
-```ts
-import tailwindcss from "@tailwindcss/vite"
-import react from "@vitejs/plugin-react"
-import { defineConfig } from "vite"
-
-export default defineConfig({
-  plugins: [react(), tailwindcss()],
-  resolve: {
-    alias: {
-      "@": "/src",
-    },
-  },
-})
-```
-
-### 2. Configure path aliases
+## 3. Configure path aliases
 
 Add `baseUrl` and `paths` to **both** `tsconfig.json` and `tsconfig.app.json`:
 
@@ -111,17 +40,35 @@ Add `baseUrl` and `paths` to **both** `tsconfig.json` and `tsconfig.app.json`:
 }
 ```
 
-### 3. Initialize shadcn
+Update `vite.config.ts` to resolve the `@` alias:
+
+```ts
+import path from "path"
+import tailwindcss from "@tailwindcss/vite"
+import react from "@vitejs/plugin-react"
+import { defineConfig } from "vite"
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+})
+```
+
+## 4. Initialize shadcn
 
 ```bash
 npx shadcn@latest init
 ```
 
-Pick **Radix** base and **Nova** preset (recommended).
+When prompted, pick **Radix** base and **Nova** preset (recommended).
 
-### 4. Add the Habitat registry
+## 5. Add the Habitat registry
 
-Open `components.json` and add `@habitat` to the `registries` field:
+Open the generated `components.json` and add `@habitat` to the `registries` field:
 
 ```json
 {
@@ -131,13 +78,17 @@ Open `components.json` and add `@habitat` to the `registries` field:
 }
 ```
 
-### 5. Install components
+Leave the rest of the file as-is — only the `registries` block is new.
+
+## 6. Install components
 
 ```bash
 npx shadcn@latest add @habitat/button @habitat/agentic-layout
 ```
 
-### 6. Use it
+This fetches the component source code, installs npm dependencies, and injects required CSS automatically.
+
+## 7. Use it
 
 ```tsx
 import { Button } from "@/components/ui/button";
@@ -150,6 +101,8 @@ export default function App() {
 ```bash
 npm run dev
 ```
+
+That's it.
 
 ---
 

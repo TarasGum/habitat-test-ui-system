@@ -75,19 +75,59 @@ export function GettingStartedPage() {
 
       <DocSection id="installation" title="Installation">
         <Steps>
-          <Step title="Create a new project">
-            <p>Run the shadcn CLI to scaffold a Vite + React + TypeScript project with Tailwind CSS v4, path aliases, and theme CSS — all in one command.</p>
-            <CommandBlock command="npx shadcn@latest init -t vite" />
-            <p>The CLI will prompt you for a project name and options. Pick <strong>Radix</strong> base and <strong>Nova</strong> preset (recommended).</p>
-            <CommandBlock command="cd my-app" />
-            <Callout type="note" title="Already have a Vite + React project?">
-              You'll need to install Tailwind CSS v4 and configure path aliases first. See the <a href="https://ui.shadcn.com/docs/installation/vite" target="_blank" rel="noopener noreferrer" className="underline">shadcn Vite guide</a> for the manual setup steps, then run <InlineCode>npx shadcn@latest init</InlineCode>.
-            </Callout>
+          <Step title="Create a Vite + React project">
+            <CommandBlock command="npm create vite@latest my-app -- --template react-ts" />
+            <CommandBlock command="cd my-app && npm install" />
+          </Step>
+
+          <Step title="Add Tailwind CSS v4">
+            <CommandBlock command="npm install tailwindcss @tailwindcss/vite" />
+            <p>Replace everything in <InlineCode>src/index.css</InlineCode> with:</p>
+            <CodeBlock filename="src/index.css" lang="css" code={`@import "tailwindcss";`} />
+          </Step>
+
+          <Step title="Configure path aliases">
+            <p>Add <InlineCode>baseUrl</InlineCode> and <InlineCode>paths</InlineCode> to <strong>both</strong> <InlineCode>tsconfig.json</InlineCode> and <InlineCode>tsconfig.app.json</InlineCode>:</p>
+            <CodeBlock
+              filename="tsconfig.json"
+              lang="json"
+              code={`{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}`}
+            />
+            <p>Update <InlineCode>vite.config.ts</InlineCode> to resolve the alias and add the Tailwind plugin:</p>
+            <CodeBlock
+              filename="vite.config.ts"
+              lang="ts"
+              code={`import path from "path"
+import tailwindcss from "@tailwindcss/vite"
+import react from "@vitejs/plugin-react"
+import { defineConfig } from "vite"
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+})`}
+            />
+          </Step>
+
+          <Step title="Initialize shadcn">
+            <CommandBlock command="npx shadcn@latest init" />
+            <p>When prompted, pick <strong>Radix</strong> base and <strong>Nova</strong> preset (recommended).</p>
           </Step>
 
           <Step title="Add the Habitat registry">
             <p>
-              Open <InlineCode>components.json</InlineCode> and add <InlineCode>@habitat</InlineCode> to the <InlineCode>registries</InlineCode> field. Leave the rest of the file as-is.
+              Open the generated <InlineCode>components.json</InlineCode> and add <InlineCode>@habitat</InlineCode> to the <InlineCode>registries</InlineCode> field. Leave the rest of the file as-is.
             </p>
             {hasProAccess ? (
               <CodeBlock
