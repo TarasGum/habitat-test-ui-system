@@ -1,6 +1,6 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "base-nova",
+  "style": "radix-nova",
   "rsc": false,
   "tsx": true,
   "tailwind": {
@@ -22,8 +22,6 @@
   "menuColor": "default",
   "menuAccent": "subtle",
   "registries": {
-    "habitat-test-ui": {
-      "url": "http://localhost:5173/r"
-    }
+    "@habitat": "http://localhost:5173/r/{name}.json"
   }
 }

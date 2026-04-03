@@ -60,11 +60,11 @@ export default defineConfig({
 
           <Step title="Set up path aliases">
             <p>
-              Add the following to your root <InlineCode>tsconfig.json</InlineCode> (not{" "}
-              <InlineCode>tsconfig.app.json</InlineCode>):
+              Add the following to your <InlineCode>tsconfig.app.json</InlineCode> (inside{" "}
+              <InlineCode>compilerOptions</InlineCode>):
             </p>
             <CodeBlock
-              filename="tsconfig.json"
+              filename="tsconfig.app.json"
               lang="json"
               code={`{
   "compilerOptions": {
@@ -81,7 +81,7 @@ export default defineConfig({
             <CommandBlock command="npx shadcn@latest init" />
             <p>When prompted, select:</p>
             <ul className="list-disc list-inside space-y-1 text-sm text-zinc-600">
-              <li>Style: <strong>New York</strong> (or any)</li>
+              <li>Style: <strong>Radix Nova</strong> (recommended) or any</li>
               <li>Base color: <strong>Neutral</strong></li>
               <li>CSS variables: <strong>Yes</strong></li>
             </ul>
@@ -93,14 +93,35 @@ export default defineConfig({
             </Callout>
           </Step>
 
+          <Step title="Configure the Habitat registry">
+            <p>
+              Add the Habitat registry to your <InlineCode>components.json</InlineCode>:
+            </p>
+            <CodeBlock
+              filename="components.json"
+              lang="json"
+              code={`{
+  "registries": {
+    "@habitat": "https://habitat-ui-system.vercel.app/r/{name}.json"
+  }
+}`}
+            />
+          </Step>
+
           <Step title="Add Habitat components">
-            <p>Install the Habitat button (and any other components) from the registry:</p>
-            <CommandBlock command="npx shadcn add https://habitat-ui-system.vercel.app/r/button.json" />
+            <p>Install components from the registry using the <InlineCode>@habitat</InlineCode> namespace:</p>
+            <CommandBlock command="npx shadcn@latest add @habitat/button" />
             <p className="text-sm text-zinc-500">
               This automatically installs dependencies like{" "}
               <InlineCode>class-variance-authority</InlineCode> and copies the component
               to <InlineCode>src/components/ui/button.tsx</InlineCode>.
             </p>
+            <Callout type="note" title="Available components">
+              <ul className="list-disc list-inside space-y-1 mt-1">
+                <li><InlineCode>@habitat/button</InlineCode> — Animated button with ripple, particles, magnetic hover</li>
+                <li><InlineCode>@habitat/agentic-layout</InlineCode> — Chat layout with sidebar, message thread, and input</li>
+              </ul>
+            </Callout>
           </Step>
 
           <Step title="Start building">

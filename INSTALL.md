@@ -37,9 +37,9 @@ Replace everything in `src/index.css` with:
 @import "tailwindcss";
 ```
 
-## 3. Set up path alias
+## 3. Set up path aliases
 
-Add to `tsconfig.json` (the root one, inside `compilerOptions`):
+Add to `tsconfig.app.json` (inside `compilerOptions`):
 
 ```json
 {
@@ -59,21 +59,37 @@ npx shadcn@latest init
 ```
 
 Follow the prompts:
-- Style: **New York**
+- Style: **Radix Nova** (recommended) or any
 - Base color: **Neutral** (or your preference)
 - CSS variables: **Yes**
 
-This creates `components.json`, the `cn` utility at `src/lib/utils.ts`, and updates your CSS.
+This creates `components.json`, the `cn` utility at `src/lib/utils.ts`, and updates your CSS with theme variables.
 
-## 5. Install Habitat UI components
+## 5. Configure the Habitat registry
 
-```bash
-npx shadcn add https://habitat-ui-system.vercel.app/r/button.json
+Add the registry to `components.json`:
+
+```json
+{
+  "registries": {
+    "@habitat": "https://habitat-ui-system.vercel.app/r/{name}.json"
+  }
+}
 ```
 
-This will automatically install any needed dependencies (`class-variance-authority`, etc.) and copy the component to `src/components/ui/button.tsx`.
+## 6. Install Habitat UI components
 
-## 6. Use it
+```bash
+# Install the button
+npx shadcn@latest add @habitat/button
+
+# Install the agentic chat layout
+npx shadcn@latest add @habitat/agentic-layout
+```
+
+This automatically installs all needed dependencies and copies components to `src/components/ui/`.
+
+## 7. Use it
 
 ```tsx
 import { Button } from "@/components/ui/button";
@@ -92,7 +108,7 @@ function App() {
 export default App;
 ```
 
-## 7. Run
+## 8. Run
 
 ```bash
 npm run dev

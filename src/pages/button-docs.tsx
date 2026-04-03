@@ -171,7 +171,7 @@ export function ButtonDocsPage() {
   const [copied, setCopied] = React.useState(false)
 
   const isBrand = variant === "brand"
-  const installCmd = `npx shadcn add ${import.meta.env.VITE_REGISTRY_URL}/button.json`
+  const installCmd = `npx shadcn@latest add @habitat/button`
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text)

@@ -25,7 +25,8 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { UserIcon } from "lucide-react"
 
-const AGENTIC_SOURCE = `import {
+const AGENTIC_SOURCE = `import * as React from "react"
+import {
   AgenticLayout,
   AgenticSidebar,
   AgenticMain,
@@ -36,8 +37,14 @@ const AGENTIC_SOURCE = `import {
   AgenticEmpty,
 } from "@/components/ui/agentic-layout"
 
+interface Message {
+  id: number
+  role: "user" | "assistant"
+  content: string
+}
+
 export default function ChatPage() {
-  const [messages, setMessages] = React.useState([])
+  const [messages, setMessages] = React.useState<Message[]>([])
 
   return (
     <AgenticLayout>
@@ -47,7 +54,6 @@ export default function ChatPage() {
           { id: "2", title: "Write a blog post" },
         ]}
         onNewChat={() => setMessages([])}
-        footer={<UserAvatar />}
       />
       <AgenticMain>
         <AgenticHeader title="New conversation" model="GPT-4o" />
@@ -339,7 +345,7 @@ export function AgenticLayoutDocsPage() {
   const [showPaywall, setShowPaywall] = React.useState(false)
   const [copied, setCopied] = React.useState(false)
 
-  const installCmd = `npx shadcn add ${import.meta.env.VITE_REGISTRY_URL}/agentic-layout.json`
+  const installCmd = `npx shadcn@latest add @habitat/agentic-layout`
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text)
