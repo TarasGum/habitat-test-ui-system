@@ -17,85 +17,28 @@ export function GettingStartedPage() {
         <Callout type="note" title="Before you begin">
           <ul className="list-disc list-inside space-y-1 mt-1">
             <li>Node.js 18 or later</li>
-            <li>A React project (or create one below)</li>
           </ul>
         </Callout>
       </DocSection>
 
-      <DocSection id="installation" title="Installation">
+      <DocSection id="new-project" title="New Project">
+        <p className="text-sm text-zinc-600 mb-4">
+          The fastest way to get started. This creates a Vite + React project with Tailwind CSS,
+          path aliases, and shadcn/ui configured in one command.
+        </p>
         <Steps>
-          <Step title="Create a React project">
-            <p>Start by creating a new Vite project with the React + TypeScript template.</p>
-            <CommandBlock command="npm create vite@latest my-app -- --template react-ts" />
-            <CommandBlock command="cd my-app && npm install" />
-          </Step>
-
-          <Step title="Install Tailwind CSS v4">
-            <p>Install Tailwind CSS and the Vite plugin.</p>
-            <CommandBlock command="npm install tailwindcss @tailwindcss/vite" />
-            <p>
-              Update your <InlineCode>vite.config.ts</InlineCode> to include the Tailwind plugin:
-            </p>
-            <CodeBlock
-              filename="vite.config.ts"
-              lang="ts"
-              code={`import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
-
-export default defineConfig({
-  plugins: [react(), tailwindcss()],
-  resolve: {
-    alias: {
-      "@": "/src",
-    },
-  },
-});`}
-            />
-            <p>
-              Replace everything in <InlineCode>src/index.css</InlineCode> with:
-            </p>
-            <CodeBlock filename="src/index.css" lang="css" code={`@import "tailwindcss";`} />
-          </Step>
-
-          <Step title="Set up path aliases">
-            <p>
-              Add the following to your <InlineCode>tsconfig.app.json</InlineCode> (inside{" "}
-              <InlineCode>compilerOptions</InlineCode>):
-            </p>
-            <CodeBlock
-              filename="tsconfig.app.json"
-              lang="json"
-              code={`{
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  }
-}`}
-            />
-          </Step>
-
-          <Step title="Initialize shadcn">
-            <CommandBlock command="npx shadcn@latest init" />
-            <p>When prompted, select:</p>
-            <ul className="list-disc list-inside space-y-1 text-sm text-zinc-600">
-              <li>Style: <strong>Radix Nova</strong> (recommended) or any</li>
-              <li>Base color: <strong>Neutral</strong></li>
-              <li>CSS variables: <strong>Yes</strong></li>
-            </ul>
+          <Step title="Create a new project with shadcn">
+            <CommandBlock command="npx shadcn@latest init -t vite" />
+            <p>Follow the prompts — pick <strong>Radix Nova</strong> style (recommended) and <strong>Neutral</strong> base color.</p>
             <Callout type="tip" title="What this does">
-              This creates <InlineCode>components.json</InlineCode>, a{" "}
-              <InlineCode>cn</InlineCode> utility at{" "}
-              <InlineCode>src/lib/utils.ts</InlineCode>, and updates your CSS with
-              theme variables.
+              Sets up Vite, Tailwind CSS v4, path aliases, <InlineCode>components.json</InlineCode>,
+              and a <InlineCode>cn</InlineCode> utility — all in one step.
             </Callout>
           </Step>
 
           <Step title="Configure the Habitat registry">
             <p>
-              Add the Habitat registry to your <InlineCode>components.json</InlineCode>:
+              Open <InlineCode>components.json</InlineCode> and add the Habitat registry:
             </p>
             <CodeBlock
               filename="components.json"
@@ -109,13 +52,8 @@ export default defineConfig({
           </Step>
 
           <Step title="Add Habitat components">
-            <p>Install components from the registry using the <InlineCode>@habitat</InlineCode> namespace:</p>
+            <p>Install components using the <InlineCode>@habitat</InlineCode> namespace:</p>
             <CommandBlock command="npx shadcn@latest add @habitat/button" />
-            <p className="text-sm text-zinc-500">
-              This automatically installs dependencies like{" "}
-              <InlineCode>class-variance-authority</InlineCode> and copies the component
-              to <InlineCode>src/components/ui/button.tsx</InlineCode>.
-            </p>
             <Callout type="note" title="Available components">
               <ul className="list-disc list-inside space-y-1 mt-1">
                 <li><InlineCode>@habitat/button</InlineCode> — Animated button with ripple, particles, magnetic hover</li>
@@ -145,6 +83,82 @@ function App() {
 export default App;`}
             />
             <CommandBlock command="npm run dev" />
+          </Step>
+        </Steps>
+      </DocSection>
+
+      <DocSection id="existing-project" title="Existing Project">
+        <p className="text-sm text-zinc-600 mb-4">
+          Already have a Vite + React project? Follow these steps to add Habitat UI to it.
+        </p>
+        <Steps>
+          <Step title="Install Tailwind CSS v4">
+            <p>Skip this if Tailwind is already configured.</p>
+            <CommandBlock command="npm install tailwindcss @tailwindcss/vite" />
+            <p>
+              Add the plugin to <InlineCode>vite.config.ts</InlineCode>:
+            </p>
+            <CodeBlock
+              filename="vite.config.ts"
+              lang="ts"
+              code={`import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      "@": "/src",
+    },
+  },
+});`}
+            />
+          </Step>
+
+          <Step title="Set up path aliases">
+            <p>
+              Skip this if the <InlineCode>@/</InlineCode> alias is already configured.
+              Add to both <InlineCode>tsconfig.json</InlineCode> and <InlineCode>tsconfig.app.json</InlineCode>:
+            </p>
+            <CodeBlock
+              filename="tsconfig.app.json"
+              lang="json"
+              code={`{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}`}
+            />
+          </Step>
+
+          <Step title="Initialize shadcn">
+            <p>This configures shadcn in your <strong>existing</strong> project — it does not create a new one.</p>
+            <CommandBlock command="npx shadcn@latest init" />
+            <p>Pick <strong>Radix Nova</strong> style (recommended), <strong>Neutral</strong> base color, and enable CSS variables.</p>
+          </Step>
+
+          <Step title="Configure the Habitat registry">
+            <p>
+              Open <InlineCode>components.json</InlineCode> and add the registry:
+            </p>
+            <CodeBlock
+              filename="components.json"
+              lang="json"
+              code={`{
+  "registries": {
+    "@habitat": "https://habitat-ui-system.vercel.app/r/{name}.json"
+  }
+}`}
+            />
+          </Step>
+
+          <Step title="Install components">
+            <CommandBlock command="npx shadcn@latest add @habitat/button" />
+            <CommandBlock command="npx shadcn@latest add @habitat/agentic-layout" />
           </Step>
         </Steps>
       </DocSection>

@@ -1,14 +1,53 @@
 # Habitat UI — Getting Started
 
-## 1. Create a React project
+## Option A: New project (recommended)
+
+### 1. Create a new project with shadcn
 
 ```bash
-npm create vite@latest my-app -- --template react-ts
-cd my-app
-npm install
+npx shadcn@latest init -t vite
 ```
 
-## 2. Install Tailwind CSS v4
+Follow the prompts — pick your style (Radix Nova recommended), base color, etc. This sets up Vite, Tailwind CSS v4, path aliases, and `components.json` in one step.
+
+### 2. Configure the Habitat registry
+
+Open `components.json` and add the registry:
+
+```json
+{
+  "registries": {
+    "@habitat": "https://habitat-ui-system.vercel.app/r/{name}.json"
+  }
+}
+```
+
+### 3. Install components
+
+```bash
+npx shadcn@latest add @habitat/button
+npx shadcn@latest add @habitat/agentic-layout
+```
+
+### 4. Use it
+
+```tsx
+import { Button } from "@/components/ui/button";
+
+export default function App() {
+  return <Button>Click me</Button>;
+}
+```
+
+```bash
+npm run dev
+```
+
+---
+
+## Option B: Existing Vite + React project
+
+### 1. Install Tailwind CSS v4
 
 ```bash
 npm install tailwindcss @tailwindcss/vite
@@ -31,15 +70,9 @@ export default defineConfig({
 });
 ```
 
-Replace everything in `src/index.css` with:
+### 2. Set up path aliases
 
-```css
-@import "tailwindcss";
-```
-
-## 3. Set up path aliases
-
-Add to `tsconfig.app.json` (inside `compilerOptions`):
+Add to both `tsconfig.json` and `tsconfig.app.json` (inside `compilerOptions`):
 
 ```json
 {
@@ -52,22 +85,19 @@ Add to `tsconfig.app.json` (inside `compilerOptions`):
 }
 ```
 
-## 4. Initialize shadcn
+### 3. Initialize shadcn
+
+This configures shadcn in your existing project — it does **not** create a new one.
 
 ```bash
 npx shadcn@latest init
 ```
 
-Follow the prompts:
-- Style: **Radix Nova** (recommended) or any
-- Base color: **Neutral** (or your preference)
-- CSS variables: **Yes**
+Pick your style (Radix Nova recommended), base color, and enable CSS variables.
 
-This creates `components.json`, the `cn` utility at `src/lib/utils.ts`, and updates your CSS with theme variables.
+### 4. Configure the Habitat registry
 
-## 5. Configure the Habitat registry
-
-Add the registry to `components.json`:
+Open `components.json` and add the registry:
 
 ```json
 {
@@ -77,41 +107,11 @@ Add the registry to `components.json`:
 }
 ```
 
-## 6. Install Habitat UI components
+### 5. Install components
 
 ```bash
-# Install the button
 npx shadcn@latest add @habitat/button
-
-# Install the agentic chat layout
 npx shadcn@latest add @habitat/agentic-layout
-```
-
-This automatically installs all needed dependencies and copies components to `src/components/ui/`.
-
-## 7. Use it
-
-```tsx
-import { Button } from "@/components/ui/button";
-
-function App() {
-  return (
-    <div className="flex items-center justify-center min-h-screen gap-4">
-      <Button>Default</Button>
-      <Button variant="outline">Outline</Button>
-      <Button variant="brand" />
-      <Button loading>Loading</Button>
-    </div>
-  );
-}
-
-export default App;
-```
-
-## 8. Run
-
-```bash
-npm run dev
 ```
 
 That's it.
