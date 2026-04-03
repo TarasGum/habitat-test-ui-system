@@ -2,65 +2,23 @@
 
 ## 1. Create a Vite + React project
 
-Skip this if you already have one.
-
 ```bash
 npm create vite@latest my-app -- --template react-ts
 cd my-app
 npm install
 ```
 
-## 2. Install Tailwind CSS v4
+## 2. Initialize shadcn
 
-Skip this if Tailwind is already configured.
-
-```bash
-npm install tailwindcss @tailwindcss/vite
-```
-
-Update `vite.config.ts` to include the Tailwind plugin and a path alias:
-
-```ts
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
-
-export default defineConfig({
-  plugins: [react(), tailwindcss()],
-  resolve: {
-    alias: {
-      "@": "/src",
-    },
-  },
-});
-```
-
-## 3. Set up path aliases
-
-Add to both `tsconfig.json` and `tsconfig.app.json` (inside `compilerOptions`):
-
-```json
-{
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  }
-}
-```
-
-## 4. Initialize shadcn
-
-This configures shadcn in your project — it creates `components.json`, a `cn` utility, and sets up your CSS with theme variables.
+Run this inside the project. It adds Tailwind CSS, path aliases, theme CSS, and a `cn` utility.
 
 ```bash
 npx shadcn@latest init
 ```
 
-When prompted, pick **Radix Nova** style (recommended), **Neutral** base color, and enable CSS variables.
+When prompted, pick **Radix Nova** style (recommended) and **Neutral** base color.
 
-## 5. Configure the Habitat registry
+## 3. Configure the Habitat registry
 
 Open `components.json` and add the registry:
 
@@ -72,14 +30,14 @@ Open `components.json` and add the registry:
 }
 ```
 
-## 6. Install components
+## 4. Install components
 
 ```bash
 npx shadcn@latest add @habitat/button
 npx shadcn@latest add @habitat/agentic-layout
 ```
 
-## 7. Use it
+## 5. Use it
 
 ```tsx
 import { Button } from "@/components/ui/button";
