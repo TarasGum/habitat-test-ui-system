@@ -75,28 +75,25 @@ export function GettingStartedPage() {
 
       <DocSection id="installation" title="Installation">
         <Steps>
-          <Step title="Create a Vite + React project">
-            <CommandBlock command="npm create vite@latest my-app -- --template react-ts" />
-            <CommandBlock command="cd my-app && npm install" />
-          </Step>
-
-          <Step title="Initialize shadcn">
-            <p>Run this inside your project. It adds Tailwind CSS v4, path aliases, theme CSS, and a <InlineCode>cn</InlineCode> utility.</p>
-            <CommandBlock command="npx shadcn@latest init" />
-            <p>When prompted, pick <strong>Radix Nova</strong> style (recommended) and <strong>Neutral</strong> base color.</p>
+          <Step title="Create a new project">
+            <p>Run the shadcn CLI to scaffold a Vite + React + TypeScript project with Tailwind CSS v4, path aliases, and theme CSS — all in one command.</p>
+            <CommandBlock command="npx shadcn@latest init -t vite" />
+            <p>The CLI will prompt you for a project name and options. Pick <strong>Radix</strong> base and <strong>Nova</strong> preset (recommended).</p>
+            <CommandBlock command="cd my-app" />
+            <Callout type="note" title="Already have a Vite + React project?">
+              You'll need to install Tailwind CSS v4 and configure path aliases first. See the <a href="https://ui.shadcn.com/docs/installation/vite" target="_blank" rel="noopener noreferrer" className="underline">shadcn Vite guide</a> for the manual setup steps, then run <InlineCode>npx shadcn@latest init</InlineCode>.
+            </Callout>
           </Step>
 
           <Step title="Add the Habitat registry">
             <p>
-              Open the generated <InlineCode>components.json</InlineCode> and add <InlineCode>@habitat</InlineCode> to the <InlineCode>registries</InlineCode> field. Leave the rest of the file as-is.
+              Open <InlineCode>components.json</InlineCode> and add <InlineCode>@habitat</InlineCode> to the <InlineCode>registries</InlineCode> field. Leave the rest of the file as-is.
             </p>
             {hasProAccess ? (
               <CodeBlock
                 filename="components.json"
                 lang="json"
                 code={`{
-  "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "radix-nova",
   "registries": {
     "@habitat": "https://habitat-ui-system.vercel.app/r/{name}.json"
   }
