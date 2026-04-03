@@ -5,20 +5,25 @@
 - **Node.js 18** or later
 - A package manager (`npm`, `pnpm`, or `yarn`)
 
-## 1. Create a new project with shadcn
-
-The fastest way to start is with the shadcn CLI. It scaffolds a Vite + React + TypeScript project with Tailwind CSS v4, path aliases, theme CSS, and a `cn` utility — all in one step.
+## 1. Create a Vite + React project
 
 ```bash
-npx shadcn@latest init -t vite my-app
+npm create vite@latest my-app -- --template react-ts
 cd my-app
+npm install
+```
+
+## 2. Initialize shadcn
+
+Run this inside your project. It adds Tailwind CSS v4, path aliases, theme CSS, and a `cn` utility.
+
+```bash
+npx shadcn@latest init
 ```
 
 When prompted, pick **Radix Nova** style (recommended) and **Neutral** base color.
 
-> **Already have a Vite + React project?** Run `npx shadcn@latest init` inside it instead — the CLI auto-detects Vite and configures everything for you.
-
-## 2. Add the Habitat registry
+## 3. Add the Habitat registry
 
 Open the generated `components.json` and add `@habitat` to the `registries` field:
 
@@ -34,7 +39,7 @@ Open the generated `components.json` and add `@habitat` to the `registries` fiel
 
 Only the `registries` block is new — leave the rest of the file as-is.
 
-## 3. Install components
+## 4. Install components
 
 ```bash
 npx shadcn@latest add @habitat/button @habitat/agentic-layout
@@ -49,7 +54,7 @@ This fetches the component source code, installs any npm dependencies, and injec
 | Button | `npx shadcn@latest add @habitat/button` |
 | Agentic Layout | `npx shadcn@latest add @habitat/agentic-layout` |
 
-## 4. Use it
+## 5. Use it
 
 ```tsx
 import { Button } from "@/components/ui/button";

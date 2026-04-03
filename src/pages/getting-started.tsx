@@ -75,14 +75,15 @@ export function GettingStartedPage() {
 
       <DocSection id="installation" title="Installation">
         <Steps>
-          <Step title="Create a new project with shadcn">
-            <p>The fastest way to start is with the shadcn CLI. It scaffolds a Vite + React + TypeScript project with Tailwind CSS v4, path aliases, theme CSS, and a <InlineCode>cn</InlineCode> utility — all in one step.</p>
-            <CommandBlock command="npx shadcn@latest init -t vite my-app" />
-            <CommandBlock command="cd my-app" />
+          <Step title="Create a Vite + React project">
+            <CommandBlock command="npm create vite@latest my-app -- --template react-ts" />
+            <CommandBlock command="cd my-app && npm install" />
+          </Step>
+
+          <Step title="Initialize shadcn">
+            <p>Run this inside your project. It adds Tailwind CSS v4, path aliases, theme CSS, and a <InlineCode>cn</InlineCode> utility.</p>
+            <CommandBlock command="npx shadcn@latest init" />
             <p>When prompted, pick <strong>Radix Nova</strong> style (recommended) and <strong>Neutral</strong> base color.</p>
-            <Callout type="note" title="Already have a project?">
-              Run <InlineCode>npx shadcn@latest init</InlineCode> inside your existing Vite + React project — the CLI auto-detects Vite and configures everything for you.
-            </Callout>
           </Step>
 
           <Step title="Add the Habitat registry">
