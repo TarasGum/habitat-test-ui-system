@@ -15,6 +15,12 @@ const sidebarNav = [
       { title: "Agentic Layout", href: "/docs/components/agentic-layout" },
     ],
   },
+  {
+    title: "Integrations",
+    items: [
+      { title: "Cursor Skill", href: "/docs/cursor-skill" },
+    ],
+  },
 ]
 
 interface TocItem {

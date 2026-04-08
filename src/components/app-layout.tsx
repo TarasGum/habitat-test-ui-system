@@ -7,6 +7,7 @@ const searchItems = [
   { label: "Getting Started", description: "Installation and setup guide", to: "/docs/getting-started", group: "Docs" },
   { label: "Button", description: "Accessible button component with variants", to: "/docs/components/button", group: "Components" },
   { label: "Agentic Layout", description: "T3 Chat-style AI chat interface layout", to: "/docs/components/agentic-layout", group: "Components" },
+  { label: "Cursor Skill", description: "AI skill file for Cursor IDE integration", to: "/docs/cursor-skill", group: "Integrations" },
   { label: "Pricing", description: "Plans and pricing", to: "/pricing", group: "Pages" },
   { label: "Log in", description: "Sign in to your account", to: "/login", group: "Pages" },
 ]

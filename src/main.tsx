@@ -12,6 +12,7 @@ import { PricingPage } from "./pages/pricing"
 import { LoginPage } from "./pages/login"
 import { CheckoutPage } from "./pages/checkout"
 import { SuccessPage } from "./pages/success"
+import { SkillDocsPage } from "./pages/skill-docs"
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -23,6 +24,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="docs/getting-started" element={<GettingStartedPage />} />
             <Route path="docs/components/button" element={<ButtonDocsPage />} />
             <Route path="docs/components/agentic-layout" element={<AgenticLayoutDocsPage />} />
+            <Route path="docs/cursor-skill" element={<SkillDocsPage />} />
             <Route path="pricing" element={<PricingPage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="checkout" element={<CheckoutPage />} />
