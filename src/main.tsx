@@ -24,7 +24,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="docs/getting-started" element={<GettingStartedPage />} />
             <Route path="docs/components/button" element={<ButtonDocsPage />} />
             <Route path="docs/components/agentic-layout" element={<AgenticLayoutDocsPage />} />
-            <Route path="docs/cursor-skill" element={<SkillDocsPage />} />
+            <Route path="docs/skill" element={<SkillDocsPage />} />
             <Route path="pricing" element={<PricingPage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="checkout" element={<CheckoutPage />} />

@@ -84,30 +84,40 @@ export function SkillDocsPage() {
   return (
     <DocLayout>
       <DocHeader
-        title="Cursor Skill"
-        description="Drop this skill into your project so Cursor always knows how to install and use Habitat UI components."
+        title="AI Skill"
+        description="Give your AI editor full context on Habitat UI — registry, commands, components, and stack — in one file."
         badge="Pro"
       />
 
       <DocSection id="what" title="What is this?">
         <p className="text-[15px] text-zinc-600 leading-relaxed">
-          A <strong>Cursor Skill</strong> is a markdown file that teaches the AI agent about your project.
-          When you add the Habitat UI skill, Cursor will know the registry URL, install commands,
-          component list, and stack requirements — no need to explain it every time.
+          An <strong>AI Skill</strong> is a markdown file you drop into your project that teaches
+          AI coding agents about Habitat UI. Once added, your editor knows the registry URL,
+          install commands, component list, and stack requirements — no need to explain it every chat.
         </p>
+        <Callout type="note" title="Works with">
+          <ul className="list-disc list-inside space-y-1 mt-1 text-[13px]">
+            <li><strong>Cursor</strong> — place in <InlineCode>.cursor/skills/habitat-ui/SKILL.md</InlineCode></li>
+            <li><strong>Windsurf</strong> — place in <InlineCode>.windsurf/rules/habitat-ui.md</InlineCode></li>
+            <li><strong>GitHub Copilot</strong> — place in <InlineCode>.github/copilot-instructions.md</InlineCode></li>
+            <li><strong>Any AI editor</strong> — paste into your project-level instructions or context file</li>
+          </ul>
+        </Callout>
       </DocSection>
 
       <DocSection id="setup" title="Add the skill to your project">
         <Steps>
-          <Step title="Create the skill directory">
+          <Step title="Create the file">
+            <p>Pick the path for your editor:</p>
             <CommandBlock command="mkdir -p .cursor/skills/habitat-ui" />
+            <p className="text-[13px] text-zinc-500 mt-1">Or use <InlineCode>.windsurf/rules/</InlineCode>, <InlineCode>.github/</InlineCode>, etc.</p>
           </Step>
 
-          <Step title="Create SKILL.md">
-            <p>Paste the following into <InlineCode>.cursor/skills/habitat-ui/SKILL.md</InlineCode>:</p>
+          <Step title="Paste the skill content">
+            <p>Copy the following into the file:</p>
             {hasProAccess ? (
               <CodeBlock
-                filename=".cursor/skills/habitat-ui/SKILL.md"
+                filename="SKILL.md"
                 lang="markdown"
                 code={SKILL_CONTENT}
               />
@@ -118,8 +128,8 @@ export function SkillDocsPage() {
 
           <Step title="Done">
             <p>
-              Cursor will automatically pick up the skill. Next time you ask it to add a Habitat component
-              or set up the registry, it already knows how.
+              Your AI editor will automatically pick up the file. Next time you ask it to
+              add a Habitat component or set up the registry, it already knows how.
             </p>
           </Step>
         </Steps>
@@ -153,7 +163,7 @@ export function SkillDocsPage() {
           </ul>
         </Callout>
         <p className="text-[15px] text-zinc-600 leading-relaxed">
-          With the skill in place, Cursor will handle the registry config, install command, and
+          With the skill in place, your AI editor will handle the registry config, install command, and
           import — without you having to copy-paste anything from the docs.
         </p>
       </DocSection>
@@ -171,7 +181,7 @@ export function SkillDocsPage() {
               Pro Access Required
             </h3>
             <p className="mt-2 text-sm text-zinc-500">
-              Get the Cursor Skill file, registry URL, and all component
+              Get the AI Skill file, registry URL, and all component
               source code with a Pro plan.
             </p>
 
@@ -183,7 +193,7 @@ export function SkillDocsPage() {
               <ul className="mt-3 space-y-1.5 text-sm text-zinc-600">
                 {[
                   "All 50+ components",
-                  "Cursor Skill file",
+                  "AI Skill file",
                   "Lifetime updates",
                 ].map((f) => (
                   <li key={f} className="flex items-center gap-2">

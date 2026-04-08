@@ -15,7 +15,7 @@ const sidebarNav = [
   },
   {
     title: "Integrations",
-    items: [{ title: "Skill", href: "/docs/skill" }],
+    items: [{ title: "AI Skill", href: "/docs/skill" }],
   },
 ];
 
