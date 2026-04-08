@@ -1,12 +1,10 @@
-import * as React from "react"
-import { NavLink, useLocation } from "react-router-dom"
+import * as React from "react";
+import { NavLink, useLocation } from "react-router-dom";
 
 const sidebarNav = [
   {
     title: "Getting Started",
-    items: [
-      { title: "Introduction", href: "/docs/getting-started" },
-    ],
+    items: [{ title: "Introduction", href: "/docs/getting-started" }],
   },
   {
     title: "Components",
@@ -17,67 +15,67 @@ const sidebarNav = [
   },
   {
     title: "Integrations",
-    items: [
-      { title: "Cursor Skill", href: "/docs/cursor-skill" },
-    ],
+    items: [{ title: "Skill", href: "/docs/skill" }],
   },
-]
+];
 
 interface TocItem {
-  id: string
-  title: string
-  level: number
+  id: string;
+  title: string;
+  level: number;
 }
 
 function TableOfContents() {
-  const [headings, setHeadings] = React.useState<TocItem[]>([])
-  const [activeId, setActiveId] = React.useState("")
+  const [headings, setHeadings] = React.useState<TocItem[]>([]);
+  const [activeId, setActiveId] = React.useState("");
 
   React.useEffect(() => {
-    const content = document.getElementById("doc-content")
-    if (!content) return
+    const content = document.getElementById("doc-content");
+    if (!content) return;
 
     const observer = new MutationObserver(() => {
-      const els = content.querySelectorAll("h2[id], h3[id]")
+      const els = content.querySelectorAll("h2[id], h3[id]");
       const items: TocItem[] = Array.from(els).map((el) => ({
         id: el.id,
         title: el.textContent ?? "",
         level: el.tagName === "H2" ? 2 : 3,
-      }))
-      setHeadings(items)
-    })
+      }));
+      setHeadings(items);
+    });
 
-    observer.observe(content, { childList: true, subtree: true })
+    observer.observe(content, { childList: true, subtree: true });
 
-    const els = content.querySelectorAll("h2[id], h3[id]")
+    const els = content.querySelectorAll("h2[id], h3[id]");
     const items: TocItem[] = Array.from(els).map((el) => ({
       id: el.id,
       title: el.textContent ?? "",
       level: el.tagName === "H2" ? 2 : 3,
-    }))
-    setHeadings(items)
+    }));
+    setHeadings(items);
 
-    return () => observer.disconnect()
-  }, [])
+    return () => observer.disconnect();
+  }, []);
 
   React.useEffect(() => {
     const handleScroll = () => {
-      const els = document.querySelectorAll("#doc-content h2[id], #doc-content h3[id]")
-      let current = ""
+      const els = document.querySelectorAll(
+        "#doc-content h2[id], #doc-content h3[id]",
+      );
+      let current = "";
       for (const el of els) {
         if (el.getBoundingClientRect().top <= 100) {
-          current = el.id
+          current = el.id;
         }
       }
-      setActiveId(current)
-    }
+      setActiveId(current);
+    };
 
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    handleScroll()
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [headings])
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [headings]);
 
-  if (headings.length === 0) return null
+  if (headings.length === 0) return null;
 
   return (
     <nav className="space-y-1">
@@ -87,8 +85,10 @@ function TableOfContents() {
           key={h.id}
           href={`#${h.id}`}
           onClick={(e) => {
-            e.preventDefault()
-            document.getElementById(h.id)?.scrollIntoView({ behavior: "smooth" })
+            e.preventDefault();
+            document
+              .getElementById(h.id)
+              ?.scrollIntoView({ behavior: "smooth" });
           }}
           className={`block text-[13px] transition-colors ${
             h.level === 3 ? "pl-3" : ""
@@ -102,11 +102,11 @@ function TableOfContents() {
         </a>
       ))}
     </nav>
-  )
+  );
 }
 
 export function DocLayout({ children }: { children: React.ReactNode }) {
-  const location = useLocation()
+  const location = useLocation();
 
   return (
     <div className="mx-auto flex max-w-[1400px] min-h-[calc(100vh-3.5rem)]">
@@ -125,12 +125,12 @@ export function DocLayout({ children }: { children: React.ReactNode }) {
                       key={item.href}
                       to={item.href}
                       className={() => {
-                        const isActive = location.pathname === item.href
+                        const isActive = location.pathname === item.href;
                         return `block rounded-md px-2.5 py-1.5 text-[13px] transition-colors ${
                           isActive
                             ? "bg-zinc-100 font-medium text-zinc-900"
                             : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800"
-                        }`
+                        }`;
                       }}
                     >
                       {item.title}
@@ -157,7 +157,7 @@ export function DocLayout({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
     </div>
-  )
+  );
 }
 
 export function DocHeader({
@@ -165,9 +165,9 @@ export function DocHeader({
   description,
   badge,
 }: {
-  title: string
-  description: string
-  badge?: string
+  title: string;
+  description: string;
+  badge?: string;
 }) {
   return (
     <div className="mb-8 space-y-2">
@@ -181,7 +181,7 @@ export function DocHeader({
       </h1>
       <p className="text-base text-zinc-500 leading-relaxed">{description}</p>
     </div>
-  )
+  );
 }
 
 export function DocSection({
@@ -189,9 +189,9 @@ export function DocSection({
   title,
   children,
 }: {
-  id: string
-  title: string
-  children: React.ReactNode
+  id: string;
+  title: string;
+  children: React.ReactNode;
 }) {
   return (
     <section className="mt-12 first:mt-0">
@@ -203,7 +203,7 @@ export function DocSection({
       </h2>
       <div className="space-y-4">{children}</div>
     </section>
-  )
+  );
 }
 
 export function DocSubSection({
@@ -211,9 +211,9 @@ export function DocSubSection({
   title,
   children,
 }: {
-  id: string
-  title: string
-  children: React.ReactNode
+  id: string;
+  title: string;
+  children: React.ReactNode;
 }) {
   return (
     <div className="mt-8">
@@ -225,5 +225,5 @@ export function DocSubSection({
       </h3>
       <div className="space-y-3">{children}</div>
     </div>
-  )
+  );
 }
