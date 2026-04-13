@@ -1,221 +1,200 @@
-import { Link } from "react-router-dom"
-import { Button } from "@/components/ui/button"
+import * as React from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { HabitatLogo } from "@/components/habitat-logo"
+import { useSearchControl } from "@/components/app-layout"
+import { useAuth } from "@/context/auth"
+import {
+  AgenticLayout,
+  AgenticSidebar,
+  AgenticMain,
+  AgenticHeader,
+  AgenticMessages,
+  AgenticMessage,
+  AgenticInput,
+} from "@/components/ui/agentic-layout"
 
-const features = [
+type ChatRole = "user" | "assistant"
+
+interface ChatLine {
+  id: string
+  role: ChatRole
+  content: string
+}
+
+const DOC_CHATS = [
+  { id: "getting-started", title: "Getting started", to: "/docs/getting-started" },
+  { id: "button", title: "Button component", to: "/docs/components/button" },
+  { id: "agentic-layout", title: "Agentic layout", to: "/docs/components/agentic-layout" },
+  { id: "skill", title: "Cursor / AI skill", to: "/docs/skill" },
+] as const
+
+const SEED_MESSAGES: ChatLine[] = [
   {
-    title: "Animated by Default",
-    description:
-      "Ripple effects, particle bursts, and orbiting borders built right in. No extra libraries needed.",
+    id: "1",
+    role: "user",
+    content: "What is Habitat UI?",
   },
   {
-    title: "Fully Composable",
-    description:
-      "Mix and match variants, sizes, and behaviors. Every prop is designed to combine cleanly.",
+    id: "2",
+    role: "assistant",
+    content:
+      "Habitat UI is a shadcn-compatible component registry: polished React blocks you install with the CLI — animated buttons, magnetic hover, and this agentic chat shell with glassmorphism and noise texture. Drop one command into a Vite or Next app and ship.",
   },
   {
-    title: "Zero Config CSS",
-    description:
-      "Keyframes inject themselves at runtime. Just import the component and go.",
+    id: "3",
+    role: "user",
+    content: "How do I add the chat layout?",
   },
   {
-    title: "shadcn Compatible",
-    description:
-      "Install via the shadcn CLI. Drops into your existing project with full TypeScript support.",
+    id: "4",
+    role: "assistant",
+    content:
+      "Run `npx shadcn@latest add @habitat/agentic-layout` after pointing the CLI at the Habitat registry. You get `AgenticLayout`, sidebar, message thread, and input — composable pieces, same pattern as the snippet in the docs.",
   },
 ]
 
-const stats = [
-  { value: "2.4k", label: "GitHub Stars" },
-  { value: "50+", label: "Components" },
-  { value: "12ms", label: "Avg Render" },
-  { value: "99%", label: "A11y Score" },
-]
-
-const testimonials = [
-  {
-    quote:
-      "Habitat buttons feel alive. The ripple and magnetic effects are the best I've used in any React library.",
-    author: "Sarah Chen",
-    role: "Design Engineer at Linear",
-  },
-  {
-    quote:
-      "Dropped it into our design system in under 5 minutes. The shadcn integration is seamless.",
-    author: "Marcus Rivera",
-    role: "Frontend Lead at Vercel",
-  },
-  {
-    quote:
-      "Finally, animated components that don't sacrifice accessibility. This is how UI should be built.",
-    author: "Aiko Tanaka",
-    role: "Staff Engineer at Stripe",
-  },
-]
+function assistantReply(prompt: string): string {
+  const q = prompt.toLowerCase()
+  if (q.includes("install") || q.includes("shadcn") || q.includes("cli")) {
+    return "Add the registry to `components.json`, then run `npx shadcn@latest add @habitat/button` or `@habitat/agentic-layout`. The Getting Started page lists the exact Tailwind v4 setup."
+  }
+  if (q.includes("price") || q.includes("pro") || q.includes("pay")) {
+    return "Pricing lives at /pricing — pro access unlocks the production registry URL and install commands on the docs."
+  }
+  if (q.includes("button") || q.includes("animate")) {
+    return "The Button includes ripple, optional particle burst, magnetic cursor pull, and an orbiting border variant — all with runtime keyframe injection so hosts do not need extra CSS."
+  }
+  return `Browse the sidebar for doc shortcuts, or open Search (${"\u2318"}K). Everything is TypeScript-first and matches the Radix Nova preset.`
+}
 
 export function LandingPage() {
+  const navigate = useNavigate()
+  const { openSearch } = useSearchControl()
+  const { isLoggedIn } = useAuth()
+  const [messages, setMessages] = React.useState<ChatLine[]>(SEED_MESSAGES)
+  const [activeChat, setActiveChat] = React.useState<string | null>(null)
+
+  const conversations = React.useMemo(
+    () =>
+      DOC_CHATS.map((c) => ({
+        id: c.id,
+        title: c.title,
+        active: activeChat === c.id,
+      })),
+    [activeChat]
+  )
+
+  const handleSelectConversation = (id: string) => {
+    const row = DOC_CHATS.find((c) => c.id === id)
+    if (row) {
+      setActiveChat(id)
+      navigate(row.to)
+    }
+  }
+
+  const handleSubmit = (value: string) => {
+    const userMsg: ChatLine = {
+      id: `u-${Date.now()}`,
+      role: "user",
+      content: value,
+    }
+    setMessages((prev) => [...prev, userMsg])
+    const reply = assistantReply(value)
+    window.setTimeout(() => {
+      setMessages((prev) => [
+        ...prev,
+        { id: `a-${Date.now()}`, role: "assistant", content: reply },
+      ])
+    }, 450)
+  }
+
   return (
-    <div className="overflow-hidden">
-      {/* Hero */}
-      <section className="relative py-28 sm:py-36">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-100 via-white to-white" />
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute -top-20 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-zinc-200/50 blur-3xl animate-[pulse_10s_ease-in-out_infinite]" />
-          <div className="absolute right-8 top-24 h-40 w-40 rounded-full bg-zinc-300/30 blur-3xl animate-[pulse_14s_ease-in-out_infinite]" />
-        </div>
-        <div className="relative mx-auto max-w-4xl px-6 text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-1.5 text-sm text-zinc-600 shadow-sm">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-            </span>
-            Now in public beta
-          </div>
-
-          <h1 className="text-5xl sm:text-7xl font-bold tracking-tighter text-black leading-[1.05]">
-            Components that
-            <br />
-            feel <span className="italic">alive</span>.
-          </h1>
-
-          <p className="mt-6 text-lg sm:text-xl text-zinc-500 max-w-2xl mx-auto leading-relaxed">
-            Habitat is a premium React component library with built-in
-            animations, magnetic interactions, and orbiting borders.
-            Drop-in ready via shadcn CLI.
-          </p>
-
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/docs/getting-started">
-              <Button size="lg" className="min-w-[180px]">
-                Get Started
-              </Button>
+    <AgenticLayout className="h-dvh min-h-0">
+      <AgenticSidebar
+        conversations={conversations}
+        onNewChat={() => {
+          setActiveChat(null)
+          setMessages(SEED_MESSAGES)
+        }}
+        onSelectConversation={handleSelectConversation}
+        header={
+          <div className="flex flex-col gap-1 px-0.5">
+            <Link
+              to="/"
+              className="flex items-center gap-2 rounded-lg px-1 py-0.5 transition-colors hover:bg-white/50"
+              onClick={() => setActiveChat(null)}
+            >
+              <HabitatLogo className="h-6 w-auto text-zinc-900" />
             </Link>
-            <Link to="/docs/components/button">
-              <Button variant="outline" size="lg" className="min-w-[180px]">
-                View Components
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Button showcase strip */}
-      <section className="border-y border-zinc-100 bg-zinc-50/50 py-16">
-        <div className="mx-auto max-w-6xl px-6">
-          <p className="text-center text-xs uppercase tracking-[0.2em] text-zinc-400 mb-10">
-            Interactive button showcase
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <Button variant="brand" size="lg" />
-            <Button variant="default" size="lg">
-              Default
-            </Button>
-            <Button variant="outline" size="lg">
-              Outline
-            </Button>
-            <Button variant="secondary" size="lg">
-              Secondary
-            </Button>
-            <Button variant="ghost" size="lg">
-              Ghost
-            </Button>
-            <Button magnetic size="lg">
-              Magnetic
-            </Button>
-            <Button orbit size="lg">
-              Orbit
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="py-20">
-        <div className="mx-auto max-w-4xl px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((stat) => (
-            <div key={stat.label} className="text-center">
-              <div className="text-4xl font-bold tracking-tight text-black">
-                {stat.value}
-              </div>
-              <div className="mt-1 text-sm text-zinc-400">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="border-t border-zinc-100 py-20 bg-white">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-black">
-              Built different
-            </h2>
-            <p className="mt-3 text-zinc-500 max-w-xl mx-auto">
-              Every detail considered, every animation purposeful.
+            <p className="text-[11px] leading-snug text-zinc-500">
+              Agentic template — glass shell, real components.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 gap-6">
-            {features.map((f) => (
-              <div
-                key={f.title}
-                className="group rounded-2xl border border-zinc-100 p-8 transition-all hover:border-zinc-200 hover:shadow-lg hover:shadow-zinc-100"
-              >
-                <h3 className="text-lg font-semibold text-black">{f.title}</h3>
-                <p className="mt-2 text-zinc-500 leading-relaxed">
-                  {f.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="border-t border-zinc-100 py-20 bg-zinc-50/30">
-        <div className="mx-auto max-w-6xl px-6">
-          <h2 className="text-center text-3xl sm:text-4xl font-bold tracking-tight text-black mb-14">
-            Loved by engineers
-          </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map((t) => (
-              <div
-                key={t.author}
-                className="rounded-2xl border border-zinc-100 bg-white p-8"
-              >
-                <p className="text-zinc-600 leading-relaxed">
-                  &ldquo;{t.quote}&rdquo;
-                </p>
-                <div className="mt-6">
-                  <div className="font-medium text-black">{t.author}</div>
-                  <div className="text-sm text-zinc-400">{t.role}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-28 text-center">
-        <div className="mx-auto max-w-2xl px-6">
-          <HabitatLogo className="h-8 w-auto text-black mx-auto mb-8" />
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-black">
-            Start building today
-          </h2>
-          <p className="mt-4 text-zinc-500">
-            One CLI command. Zero config. Full control.
-          </p>
-          <div className="mt-8 inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50 px-5 py-3 font-mono text-sm text-zinc-700">
-            <span className="text-zinc-400">$</span>
-            npx shadcn@latest init
-          </div>
-          <div className="mt-8">
-            <Link to="/docs/getting-started">
-              <Button size="lg">Read the Docs</Button>
+        }
+        footer={
+          <div className="flex flex-col gap-2 text-[11px]">
+            <Link
+              to="/pricing"
+              className="font-medium text-zinc-700 underline-offset-2 hover:underline"
+            >
+              Pricing
             </Link>
+            {isLoggedIn ? (
+              <span className="text-zinc-400">Signed in</span>
+            ) : (
+              <Link
+                to="/login"
+                className="text-zinc-500 underline-offset-2 hover:text-zinc-800 hover:underline"
+              >
+                Log in
+              </Link>
+            )}
           </div>
-        </div>
-      </section>
-    </div>
+        }
+      />
+      <AgenticMain>
+        <AgenticHeader
+          title="Habitat UI"
+          model="Live registry demo"
+          actions={
+            <div className="flex flex-wrap items-center justify-end gap-1 sm:gap-2">
+              <button
+                type="button"
+                onClick={openSearch}
+                className="rounded-lg px-2 py-1 text-xs font-medium text-zinc-600 transition-colors hover:bg-white/60 hover:text-zinc-900"
+              >
+                Search
+                <kbd className="ml-1 hidden font-mono text-[10px] text-zinc-400 sm:inline">
+                  {"\u2318"}K
+                </kbd>
+              </button>
+              <Link
+                to="/pricing"
+                className="rounded-lg px-2 py-1 text-xs font-medium text-zinc-600 transition-colors hover:bg-white/60 hover:text-zinc-900"
+              >
+                Pricing
+              </Link>
+              <Link
+                to="/docs/getting-started"
+                className="rounded-lg bg-zinc-900 px-2.5 py-1 text-xs font-medium text-white shadow-sm transition-colors hover:bg-zinc-800"
+              >
+                Get started
+              </Link>
+            </div>
+          }
+        />
+        <AgenticMessages>
+          {messages.map((m) => (
+            <AgenticMessage key={m.id} role={m.role}>
+              {m.content}
+            </AgenticMessage>
+          ))}
+        </AgenticMessages>
+        <AgenticInput
+          placeholder="Ask about install, components, or pricing…"
+          onSubmit={handleSubmit}
+        />
+      </AgenticMain>
+    </AgenticLayout>
   )
 }
