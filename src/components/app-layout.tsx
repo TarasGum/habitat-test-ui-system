@@ -133,18 +133,6 @@ function SearchDialog({ open, onClose }: { open: boolean; onClose: () => void })
   )
 }
 
-const SearchControlContext = React.createContext<{ openSearch: () => void } | null>(
-  null
-)
-
-export function useSearchControl() {
-  const ctx = React.useContext(SearchControlContext)
-  if (!ctx) {
-    throw new Error("useSearchControl must be used within AppLayout")
-  }
-  return ctx
-}
-
 const navLinks = [
   {
     to: "/docs/getting-started",
@@ -161,7 +149,6 @@ const navLinks = [
 
 export function AppLayout() {
   const location = useLocation()
-  const isHome = location.pathname === "/"
   const { isLoggedIn, logout } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
   const [isSearchOpen, setIsSearchOpen] = React.useState(false)
@@ -200,21 +187,8 @@ export function AppLayout() {
     return () => window.removeEventListener("keydown", onKeyDown)
   }, [isMenuOpen])
 
-  const searchControl = React.useMemo(
-    () => ({ openSearch: () => setIsSearchOpen(true) }),
-    []
-  )
-
   return (
-    <SearchControlContext.Provider value={searchControl}>
-    <div
-      className={
-        isHome
-          ? "min-h-screen overflow-hidden"
-          : "min-h-screen flex flex-col bg-white text-zinc-900"
-      }
-    >
-      {!isHome && (
+    <div className="min-h-screen flex flex-col bg-white text-zinc-900">
       <header className="sticky top-0 z-50 border-b border-zinc-100 bg-white/80 backdrop-blur-lg">
         <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-6 px-6">
           <Link to="/" className="flex items-center gap-2.5 shrink-0">
@@ -298,10 +272,8 @@ export function AppLayout() {
           </div>
         </div>
       </header>
-      )}
 
       {/* Mobile menu overlay */}
-      {!isHome && (
       <div
         id="mobile-menu-overlay"
         className={`md:hidden fixed inset-0 z-[60] transition-opacity duration-200 ${
@@ -379,15 +351,13 @@ export function AppLayout() {
           </div>
         </div>
       </div>
-      )}
 
-      <main className={isHome ? "contents" : "flex-1"}>
+      <main className="flex-1">
         <Outlet />
       </main>
 
       <SearchDialog open={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
-      {!isHome && (
       <footer className="border-t border-zinc-100 py-8">
         <div className="mx-auto max-w-[1400px] px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-zinc-400">
           <div className="flex items-center gap-2">
@@ -397,8 +367,6 @@ export function AppLayout() {
           <p>Built for developers who care about craft.</p>
         </div>
       </footer>
-      )}
     </div>
-    </SearchControlContext.Provider>
   )
 }
